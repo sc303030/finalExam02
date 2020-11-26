@@ -20,7 +20,6 @@ from django.utils.dateformat import DateFormat
 def index(request):
     return render(request, 'finalApp/index_2.html')
 
-
 def about(request):
     return render(request, 'finalApp/about.html')
 
@@ -45,6 +44,22 @@ def seoulprice(request):
 def cu(request):
     return render(request, 'finalApp/seoul_cabbage_map.html')
 
+def distribution(request):
+    return render(request, 'finalApp/distribution.html')
+
+def cart(request):
+    return render(request, 'finalApp/cart.html')
+
+def news(request):
+    return render(request, 'finalApp/news.html')
+
+def singlenews(request):
+    return render(request, 'finalApp/single-news.html')
+
+def page404(request):
+    return render(request, 'finalApp/404.html')
+def checkout(request):
+    return render(request, 'finalApp/checkout.html')
 
 def noonegu(request, id):
     price_mart = []
@@ -442,4 +457,29 @@ def mapseoulpriceajax(request, id):
     }
     data = [context]
 
+    return JsonResponse(data, safe=False)
+
+def vegetableSelectProducer(request, id):
+    print(id)
+    print('----------- ajax json vegetableSelectProducer')
+    price_total = []
+    category = []
+    days = []
+    with open('./static/seoul_mart_jang_graph_select_test_producer02.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
+        reader = csv.reader(vegetable_lists_p)
+
+        for list_num in reader:
+            if list_num[2] == str(id):
+                price_total.append(int(list_num[0]))
+                category.append(list_num[2])
+                days.append(list_num[1])
+
+
+    context = {
+
+        'price_total': price_total,
+        'days': days,
+        'category': category[0]
+    }
+    data = [context]
     return JsonResponse(data, safe=False)
