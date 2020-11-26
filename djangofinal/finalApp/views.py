@@ -2,17 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.decorators.clickjacking import xframe_options_deny
-from djangofinal.settings import BASE_DIR
-import json
 import csv
-import ast
-import folium
-import pandas as pd
-from datetime import datetime
-from time import mktime, strptime
-from django.utils.dateformat import DateFormat
 
 
 # Create your views here.

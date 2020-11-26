@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import ajaximage
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -50,8 +48,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
-X_FRAME_OPTIONS = 'DENY'
-X_FRAME_OPTIONS  = 'ALLOW-FROM http://127.0.0.1:8000/'
+
 
 ROOT_URLCONF = 'djangofinal.urls'
 
