@@ -1,0 +1,677 @@
+{% include 'finalApp/header.html' %}
+{% block content %}
+{% load static %}
+	<!-- title -->
+	<title>Shop</title>
+
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="{% static 'assets/css/all.min.css' %}">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="{% static 'assets/css/owl.carousel.css' %}">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+	<!-- animate css -->
+	<link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href="{% static 'assets/css/meanmenu.min.css' %}">
+	<!-- main style -->
+	<link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+<style>
+	.chartdiv {
+  		width: 100%;
+  		height: 100%;
+		/*margin-bottom: 50px;*/
+		/*padding-bottom: 50px;*/
+	}
+</style>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>빅데이터가 말하는</p>
+						<h1>채소 가격 변동</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- products -->
+	<div class="product-section mt-100 mb-50">
+		<div class="container">
+			<div class="row product-lists">
+				<div class="col-lg-2 col-md-6 text-center onion  ml-4 mr-3">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="{% static 'assets/img/products/onion.jpg' %}" alt=""></a>
+						</div>
+						<p class="product-price"><span>15Kg</span>양파</p>
+						<a href="#nooneacabbagediv" data-toggle="collapse"  class="cart-btn" id="vegetableclick1" ><i class="fas fa-shopping-cart"></i>Click</a>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6 text-center cabbage ml-4">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#None"><img src="{% static 'assets/img/products/cabbage.jpg' %}" alt=""></a>
+						</div>
+						<p class="product-price"><span>10Kg</span>배추</p>
+						<a href="#nooneacabbagediv" data-toggle="collapse"   class="cart-btn" id="vegetableclick2"><i class="fas fa-shopping-cart"></i>Click</a>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6 text-center Radish ml-4">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="{% static 'assets/img/products/Radish.jpg' %}" alt=""></a>
+						</div>
+						<p class="product-price"><span>20Kg</span>무</p>
+						<a href="#nooneacabbagediv" data-toggle="collapse"   class="cart-btn" id="vegetableclick3"><i class="fas fa-shopping-cart"></i>Click</a>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6 text-center cucumber ml-4">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="{% static 'assets/img/products/cucumber.jpg' %}" alt=""></a>
+						</div>
+						<p class="product-price"><span>3Kg</span>오이</p>
+						<a href="#nooneacabbagediv" data-toggle="collapse"   class="cart-btn" id="vegetableclick4"><i class="fas fa-shopping-cart"></i>Click</a>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6 text-center lettuce ml-4">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="single-product.html"><img src="{% static 'assets/img/products/lettuce.jpg' %}" alt=""></a>
+						</div>
+						<p class="product-price"><span>10Kg</span>상추</p>
+						<a href="#nooneacabbagediv" data-toggle="collapse"   class="cart-btn"  id="vegetableclick5"><i class="fas fa-shopping-cart"></i>Click</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="container collapse "  id="nooneacabbagediv" >
+	<div class="col-md-push-(12)">
+					<!-- single product -->
+		<div class="more-products mt-80">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="section-title" id="nametitle">
+						<h3>4년간의 <span class="orange-text">배추 가격</span> 변동율</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div></div>
+	<!-- end single product -->
+
+	<!-- more products -->
+	<figure class="highcharts-figure col-lg-6 mb-80" id="chartregion" >
+					<div id ="chartdiv">
+						<p class="highcharts-description">
+<!--						    <canvas id="myChart" width="400" height="400"></canvas>-->
+						</p>
+			<img src="{% static 'assets/img/products/radish_graph.jpg' %}" usemap="#image-map" >
+
+			<map name="image-map">
+				<area target="_self" alt="무첫번째" title="무첫번째" href="#none" coords="231,332,192,347,192,365,211,367,234,354" shape="poly">
+				<area target="_self" alt="무두번째" title="무두번째" href="#none" coords="239,166,284,152,287,178,245,194" shape="poly">
+				<area target="_self" alt="무세번째" title="무세번째" href="#none" coords="343,333,348,356,379,345,378,322" shape="poly">
+				<area target="_self" alt="무네번째" title="무네번째" href="#none" coords="357,360,389,347,403,369,363,393" shape="poly">
+				<area target="_self" alt="무다섯번째" title="무다섯번째" href="#none" coords="636,148,644,174,678,153,672,134" shape="poly">
+			</map>
+
+
+					</div>
+
+	</figure>
+
+</div>
+	<!-- Image Map Generated by http://www.image-map.net/ -->
+	<!-- end more products -->
+	<!-- end products -->
+
+{% endblock %}
+{% include 'finalApp/footer.html' %}
+<!--	<script type="text/javascript"  src="https://cdn.amcharts.com/lib/4/core.js"></script>-->
+<!--	<script type="text/javascript"  src="https://cdn.amcharts.com/lib/4/charts.js"></script>-->
+<!--	<script type="text/javascript"  src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>-->
+	<script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		$('#vegetableclick1').click(function () {
+			$.ajax({
+				url: "{% url 'vegetableSelect' id='양파' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					$('#nametitle').empty()
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					if(data[0].priceZero == 'False'){
+						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
+						$('#nooneacabbagediv').hide()
+					}
+					var dataonion = data[0].onion_change
+					var length = data[0].daylength
+					var getDay = function() {
+					  var data = [];
+					  for (var i = 0; i< length; i++) {
+						if(dataonion[i] == -15.07){
+							data.push({
+								y: -15.07,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/onion_minimi.png' %})'
+								}
+							})
+						}
+						else if(dataonion[i] == -12.38){
+							data.push({
+								y: -12.38,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/onion_minimi.png' %})'
+								}
+							})
+						}
+						else if(dataonion[i] == 15.81){
+							data.push({
+								y: 15.81,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/onion_minimi.png' %})'
+								}
+							})
+						}
+						else{
+					  		data.push(dataonion[i]);}
+
+					  }
+					  return data;
+					}
+					Highcharts.chart('chartdiv', {
+							chart : { type : 'spline'},
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							xAxis : {
+								 categories: data[0].data_price_change,
+								labels: {
+								 	step : 1,
+								 	rotation: -60,
+									style: {
+										fontSize: '7px'
+									}
+								}
+							},tooltip: {
+								crosshairs: true,
+								shared: true
+							},
+							credits: {
+								enabled: false
+							},
+							plotOptions: {
+								spline: {
+									marker: {
+										radius: 0,
+										lineColor: '#a323de',
+										lineWidth: 0
+									}
+								},
+								series: {
+										   color: '#ffb300' // series color
+									   }
+							},
+							yAxis : {
+								title : {text : '변동율'},
+								labels: {
+									formatter: function () {
+										return this.value + '%';
+									}
+								}
+							},
+							series : [
+								{   name: data[0].category  + " 변동율",
+									data: getDay()
+								}]
+						})
+					}
+					})
+				})
+		$('#vegetableclick2').click(function () {
+			$.ajax({
+				url: "{% url 'vegetableSelect' id='배추' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					$('#nametitle').empty()
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					if(data[0].priceZero == 'False'){
+						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
+						$('#nooneacabbagediv').hide()
+					}
+					var datacabbage = data[0].cabbage_change
+					var length = data[0].daylength
+					var getDay2 = function() {
+					  var data = [];
+					  for (var i = 0; i< length; i++) {
+						if(datacabbage[i] == 72.62){
+							data.push({
+								y: 72.62,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
+								}
+							})
+						}
+						else if(datacabbage[i] == -37.74){
+							data.push({
+								y: -37.74,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
+								}
+							})
+						}
+						else if(datacabbage[i] == 47.7){
+							data.push({
+								y: 47.7,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
+								}
+							})
+						}
+						else if(datacabbage[i] == -41.11){
+							data.push({
+								y: -41.11,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
+								}
+							})
+						}
+						else{
+					  		data.push(datacabbage[i]);}
+
+					  }
+					  return data;
+					}
+					console.log(getDay2())
+					Highcharts.chart('chartdiv', {
+							chart : { type : 'spline'},
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							xAxis : {
+								 categories: data[0].data_price_change,
+								labels: {
+								 	step : 1,
+								 	rotation: -60,
+									style: {
+										fontSize: '7px'
+									}
+								}
+							},tooltip: {
+								crosshairs: true,
+								shared: true
+							},
+							credits: {
+								enabled: false
+							},
+							plotOptions: {
+								spline: {
+									marker: {
+										radius: 0,
+										lineColor: '#a323de',
+										lineWidth: 0
+									}
+								},
+								series: {
+										   color: '#98d46a' // series color
+									   }
+							},
+							yAxis : {
+								title : {text : '변동율'},
+								labels: {
+									formatter: function () {
+										return this.value + '%';
+									}
+								}
+							},
+							series : [
+								{   name: data[0].category  + " 변동율",
+									data: getDay2()
+								}]
+						})
+					}
+					})
+				})
+		$('#vegetableclick3').click(function () {
+			$.ajax({
+				url: "{% url 'vegetableSelect' id='무' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					$('#nametitle').empty()
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					if(data[0].priceZero == 'False'){
+						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
+						$('#nooneacabbagediv').hide()
+					}
+					var dataraddish = data[0].raddish_change
+					var length = data[0].daylength
+					var getDay3 = function() {
+					  var data = [];
+					  for (var i = 0; i< length; i++) {
+						if(dataraddish[i] == -27.49){
+							data.push({
+								y: -27.49,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
+								}
+							})
+						}
+						else if(dataraddish[i] == 42.43){
+							data.push({
+								y: 42.43,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
+								}
+							})
+						}
+						else if(dataraddish[i] == -23.37){
+							data.push({
+								y: -23.37,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
+								}
+							})
+						}
+						else if(dataraddish[i] == 50.63){
+							data.push({
+								y: 50.63,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
+								}
+							})
+						}
+						else if(dataraddish[i] == -34.82){
+							data.push({
+								y: -34.82,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
+								}
+							})
+						}
+						else{
+					  		data.push(dataraddish[i]);}
+					  }
+					  return data;
+					}
+					console.log(getDay3())
+					Highcharts.chart('chartdiv', {
+							chart : { type : 'spline'},
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							xAxis : {
+								 categories: data[0].data_price_change,
+								labels: {
+								 	step : 1,
+								 	rotation: -60,
+									style: {
+										fontSize: '7px'
+									}
+								}
+							},tooltip: {
+								crosshairs: true,
+								shared: true
+							},
+							credits: {
+								enabled: false
+							},
+							plotOptions: {
+								spline: {
+									marker: {
+										radius: 0,
+										lineColor: '#a323de',
+										lineWidth: 0
+									}
+								},
+								series: {
+										   color: '#97d665' // series color
+									   }
+							},
+							yAxis : {
+								title : {text : '변동율'},
+								labels: {
+									formatter: function () {
+										return this.value + '%';
+									}
+								}
+							},
+							series : [
+								{   name: data[0].category  + " 변동율",
+									data: getDay3()
+								}]
+						})
+					}
+					})
+				})
+		$('#vegetableclick4').click(function () {
+			$.ajax({
+				url: "{% url 'vegetableSelect' id='오이' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					$('#nametitle').empty()
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					if(data[0].priceZero == 'False'){
+						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
+						$('#nooneacabbagediv').hide()
+					}
+					var datacucumber = data[0].cucumber_change
+					var length = data[0].daylength
+					var getDay4 = function() {
+					  var data = [];
+					  for (var i = 0; i< length; i++) {
+						if(datacucumber[i] == 66.66){
+							data.push({
+								y: 66.66,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cucumber_mini.png' %})'
+								}
+							})
+						}
+						else if(datacucumber[i] == -29.2){
+							data.push({
+								y:  -29.2,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cucumber_mini.png' %})'
+								}
+							})
+						}
+						else if(datacucumber[i] == 34.15){
+							data.push({
+								y: 34.15,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cucumber_mini.png' %})'
+								}
+							})
+						}
+						else{
+					  		data.push(datacucumber[i]);}
+
+					  }
+					  return data;
+					}
+					console.log(getDay4())
+					Highcharts.chart('chartdiv', {
+							chart : { type : 'spline'},
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							xAxis : {
+								 categories: data[0].data_price_change,
+								labels: {
+								 	step : 1,
+								 	rotation: -60,
+									style: {
+										fontSize: '7px'
+									}
+								}
+							},tooltip: {
+								crosshairs: true,
+								shared: true
+							},
+							credits: {
+								enabled: false
+							},
+							plotOptions: {
+								spline: {
+									marker: {
+										radius: 0,
+										lineColor: '#a323de',
+										lineWidth: 0
+									}
+								},
+								series: {
+										   color: '#376116' // series color
+									   }
+							},
+							yAxis : {
+								title : {text : '변동율'},
+								labels: {
+									formatter: function () {
+										return this.value + '%';
+									}
+								}
+							},
+							series : [
+								{   name: data[0].category  + " 변동율",
+									data: getDay4()
+								}]
+						})
+					}
+					})
+				})
+		$('#vegetableclick5').click(function () {
+			$.ajax({
+				url: "{% url 'vegetableSelect' id='상추' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					$('#nametitle').empty()
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					if(data[0].priceZero == 'False'){
+						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
+						$('#nooneacabbagediv').hide()
+					}
+					var datalettuce = data[0].lettuce_change
+					var length = data[0].daylength
+					var getDay5 = function() {
+					  var data = [];
+					  for (var i = 0; i< length; i++) {
+						if(datalettuce[i] == 81.16){
+							data.push({
+								y: 81.16,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/lettuce_mini.png' %})'
+								}
+							})
+						}
+						else if(datalettuce[i] == -25.73){
+							data.push({
+								y: -25.73,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/lettuce_mini.png' %})'
+								}
+							})
+						}
+						else if(datalettuce[i] == 28.2){
+							data.push({
+								y: 28.2,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/lettuce_mini.png' %})'
+								}
+							})
+						}
+						else if(datalettuce[i] == -27.54){
+							data.push({
+								y:  -27.54,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/lettuce_mini.png' %})'
+								}
+							})
+						}
+						else if(datalettuce[i] == 60.54){
+							data.push({
+								y:   60.54,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/lettuce_mini.png' %})'
+								}
+							})
+						}
+						else{
+					  		data.push(datalettuce[i]);}
+
+					  }
+					  return data;
+					}
+					console.log(getDay5())
+					Highcharts.chart('chartdiv', {
+							chart : { type : 'spline'},
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							xAxis : {
+								 categories: data[0].data_price_change,
+								labels: {
+								 	step : 1,
+								 	rotation: -60,
+									style: {
+										fontSize: '7px'
+									}
+								}
+							},tooltip: {
+								crosshairs: true,
+								shared: true
+							},
+							credits: {
+								enabled: false
+							},
+							plotOptions: {
+								spline: {
+									marker: {
+										radius: 0,
+										lineColor: '#a323de',
+										lineWidth: 0
+									}
+								},
+								series: {
+										   color: '#229106' // series color
+									   }
+							},
+							yAxis : {
+								title : {text : '변동율'},
+								labels: {
+									formatter: function () {
+										return this.value + '%';
+									}
+								}
+							},
+							series : [
+								{   name: data[0].category  + " 변동율",
+									data: getDay5()
+								}]
+						})
+					}
+					})
+				})
+	})
+	</script>
+</body>
+</html>

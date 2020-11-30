@@ -1,7 +1,4 @@
------------------------------------------------------------------------------ */
-.video-bg-1 {
-  background-image: url(../img/latest-news/video-bg-1.jpg);
-}
+/*----------------------------------------------------------------------------- */
 
 .video-bg-2 {
   background-image: url(../img/latest-news/video-bg-2.png);
@@ -10,6 +7,11 @@
 .video-bg-3 {
   background-image: url(../img/latest-news/video-bg-3.png);
 }
+
+.video-bg-4 {
+  background-image: url(../img/latest-news/video-bg-1.png);
+}
+
 /* -----------------------------------------------------------------------------
 
 # News Styles

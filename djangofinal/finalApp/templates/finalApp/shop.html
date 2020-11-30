@@ -223,7 +223,10 @@
 							xAxis : {  categories: data[0].days},
 							yAxis : {
 								title : {text : '가격(원)'}
-						},
+							},
+							credits: {
+								enabled: false
+							},
 							series : [
 								{   name: "전체",
 									data: data[0].price_total
@@ -234,6 +237,9 @@
 							title : { text :  data[0].category + '의 경락가 형성 변수 중요도'},
 							xAxis : {  categories: data[0].price_total},
 							yAxis : { title : {text : '평균가격'} },
+							credits: {
+								enabled: false
+							},
 							plotOptions: {
 								series: {
             						colorByPoint: true
@@ -460,7 +466,7 @@
     						},
 							series : [
 								{   name: "전체",
-									data: data[0].price_total
+									data:  data[0].price_total
 								}]
 						})
 				}

@@ -28,12 +28,6 @@ def news(request):
 def mapseoulprice(request):
     return render(request, 'finalApp/seoul_map_price.html')
 
-def seoulprice(request):
-    return render(request, 'finalApp/seoul_lettuce_map.html')
-
-def cu(request):
-    return render(request, 'finalApp/seoul_cabbage_map.html')
-
 def distribution(request):
     return render(request, 'finalApp/distribution.html')
 
@@ -50,6 +44,10 @@ def page404(request):
     return render(request, 'finalApp/404.html')
 def checkout(request):
     return render(request, 'finalApp/checkout.html')
+
+
+def bigdatatell(request):
+    return render(request, 'finalApp/bigdatatell.html')
 
 def noonegu(request, id):
     price_mart = []
@@ -238,7 +236,6 @@ def noonegu(request, id):
             wr.writerow(i)
 
 
-
     context = {
         'price_si': price_si,
         'price_mart': price_mart,
@@ -351,13 +348,49 @@ def vegetableSelect(request, id):
                 year2020_mean.append(int(list_num[0]))
                 year2020_place.append(list_num[2])
 
+    dada2 = []
+
+    for i in range(1,len(dada)+1):
+        if i % 3 == 0:
+            dada2.append(dada[i-1][:4] + '년' + dada[i-1][5:7] + '월')
+        else:
+            dada2.append(' ')
+
+    data_price_change = []
+    onion_change = []
+    cabbage_change = []
+    raddish_change = []
+    cucumber_change = []
+    lettuce_change = []
+
+    with open('./static/seoul_price_change.csv', mode='r', encoding='utf-8-sig') as vegetable_lists:
+        reader = csv.reader(vegetable_lists)
+
+        for list_num in reader:
+            if str(id) == '양파':
+                data_price_change.append(list_num[0][0:4] + '년' + list_num[0][5:7] + '월')
+                onion_change.append(round(float(list_num[1]),2))
+            elif str(id) == '배추':
+                data_price_change.append(list_num[0][0:4] + '년' + list_num[0][5:7] + '월')
+                cabbage_change.append(round(float(list_num[2]),2))
+            elif str(id) == '무':
+                data_price_change.append(list_num[0][0:4] + '년' + list_num[0][5:7] + '월')
+                raddish_change.append(round(float(list_num[3]),2))
+            elif str(id) == '오이':
+                data_price_change.append(list_num[0][0:4] + '년' + list_num[0][5:7] + '월')
+                cucumber_change.append(round(float(list_num[4]),2))
+            else:
+                data_price_change.append(list_num[0][0:4] + '년' + list_num[0][5:7] + '월')
+                lettuce_change.append(round(float(list_num[5]),2))
+
+    print(data_price_change)
     context = {
         'price_si': price_si,
         'price_mart': price_mart,
         'price_seoul': price_seoul,
         'name': name[0],
         'category': category[0],
-        "dada":dada,
+        "dada":dada2,
 
         'ratio': ratio,
         'ExpCheap': ExpCheap,
@@ -367,10 +400,16 @@ def vegetableSelect(request, id):
 
         'year2020_mean': year2020_mean,
         'year2020_place': year2020_place,
-        'length': len(year2020_place)
-    }
+        'length': len(year2020_place),
 
-    print(context.get('dada'))
+        'data_price_change': data_price_change,
+        'onion_change': onion_change,
+        'cabbage_change': cabbage_change,
+        'raddish_change': raddish_change,
+        'cucumber_change': cucumber_change,
+        'lettuce_change': lettuce_change,
+        'daylength': len(data_price_change)
+    }
     if price_si[0] == 0:
         context['sizero'] = 'False'
 
@@ -428,6 +467,8 @@ def mapseoulpriceajax(request, id):
     print('*'*100)
     print(rank_num, price_ch_location,price_ch_place, price_ch_price,  price_ch_martsi)
 
+
+
     context = {
         'priceExLocation':price_ex_location,
         'priceExPlace': price_ex_place,
@@ -444,6 +485,8 @@ def mapseoulpriceajax(request, id):
         'rankNum': rank_num,
 
         'name': category[0]
+
+
     }
     data = [context]
 

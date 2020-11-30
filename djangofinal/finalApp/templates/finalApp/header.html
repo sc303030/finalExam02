@@ -37,7 +37,6 @@
 		/*padding-bottom: 50px;*/
 	}
 </style>
-<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 
@@ -72,7 +71,7 @@
 								<li><a href="{% url 'shop' %}">생산자</a></li>
 								<li><a href="#">더 알아보기</a>
 									<ul class="sub-menu">
-										<li><a href="#">채소 가격 변동</a></li>
+										<li><a href="{% url 'bigdatatell' %}">채소 가격 변동</a></li>
 										<li><a href="{% url 'distribution' %}">유통</a></li>
 										<li><a href="{% url 'news' %}">농산물 관련 기사</a></li>
 									</ul>
