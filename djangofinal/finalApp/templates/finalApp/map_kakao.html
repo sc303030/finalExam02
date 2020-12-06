@@ -1,0 +1,3220 @@
+{% include 'finalApp/header.html' %}
+{% block content %}
+{% load static %}
+    <!-- map plus -->
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script>L_PREFER_CANVAS=false; L_NO_TOUCH=false; L_DISABLE_3D=false;</script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.4.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+
+    <meta name="viewport" content="width=device-width,
+        initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+	<link rel="stylesheet" href="{% static 'assets/css/video.css' %}">
+	<link href="{% static 'lity/dist/lity.css' %}" rel="stylesheet">
+	<script src="{% static 'lity/vendor/jquery.js' %}"></script>
+	<script src="{% static 'lity/dist/lity.js' %}"></script>
+
+
+
+	<style>
+.customoverlay {position:relative;bottom:85px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;}
+.customoverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+.customoverlay a {display:block;text-decoration:none;color:#000;text-align:center;border-radius:6px;font-size:14px;font-weight:bold;overflow:hidden;background: #d95050;background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+.customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:14px;font-weight:bold;}
+.customoverlay:after {content:'';position:absolute;margin-left:-12px;left:50%;bottom:-12px;width:22px;height:12px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+.dot {overflow:hidden;float:left;width:12px;height:12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png');}
+.dotOverlay {position:relative;bottom:10px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;font-size:12px;padding:5px;background:#fff;}
+.dotOverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+.number {font-weight:bold;color:#ee6152;}
+.dotOverlay:after {content:'';position:absolute;margin-left:-6px;left:50%;bottom:-8px;width:11px;height:8px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white_small.png')}
+.distanceInfo {position:relative;top:5px;left:5px;list-style:none;margin:0;}
+.distanceInfo .label {display:inline-block;width:50px;}
+.distanceInfo:after {content:none;}
+</style>
+</head>
+<body>
+
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+                        <p>서울시</p>
+						<h1>마트 • 시장 지도</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+<!-- products -->
+	<div class="row">
+		<div class="col-md-12" style="margin-top: 50px;">
+			<div class="product-filters">
+                        <ul>
+                            <li id="gangnum">강남</li>
+                            <li id="gangseo">강서</li>
+                            <li id="gangbuck">강북</li>
+							<li id="gangdong">강동</li>
+                        </ul>
+                    </div>
+				</div>
+	</div>
+	<div class="product-section">
+		<div class="container">
+			<div class="row mb-100" id="folium">
+				<div id="map" style="width:100%;height:120%;position: relative;"><h3 style="text-align: center;">지역을 선택하십시오.</h3></div>
+			</div>
+			<div class="cart-table-wrap text-center mb-150" id="tableexpenclass" >
+						<h4 style="text-align: center">시장 & 마트<span class="orange-text"> 주소 </span></h4>
+						<table class="price-table " style="width: 850px; float:none; margin:0 auto">
+							<thead class="cart-table-head nowrap">
+								<tr class="table-head-row">
+									<th class="price-status">No</th>
+									<th class="price-status">지역구</th>
+									<th class="price-status">구분</th>
+									<th class="price-week-pred">장소</th>
+									<th class="price-week-pred">주소</th>
+									<th class="price-week-pred">전화번호</th>
+								</tr>
+							</thead>
+							<tbody class="nowrap" id="tableexpensive">
+								<tr class="table-body-row">
+								</tr>
+							</tbody>
+						</table>
+					</div>
+			<p id="result"></p>
+		</div>
+		</div>
+
+
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b3d2f674b7a65c128fda01014049e86b&libraries=services,clusterer,drawing"></script>
+	<script>
+	$(document).on('click', '[data-lightbox]', lity);
+    </script>
+<!--	<script>-->
+<!--		lat = ""-->
+<!--		lng = ""-->
+<!--		function getLocation() {-->
+<!--		  if (navigator.geolocation) { // GPS를 지원하면-->
+<!--			navigator.geolocation.getCurrentPosition(function(position) {-->
+<!--				display(position.coords.latitude, position.coords.longitude);-->
+<!--			}, function(error) {-->
+<!--			  console.error(error);-->
+<!--			}, {-->
+<!--			  enableHighAccuracy: false,-->
+<!--			  maximumAge: 0,-->
+<!--			  timeout: Infinity-->
+<!--			});-->
+<!--		  } else {-->
+<!--			alert('GPS를 지원하지 않습니다');-->
+<!--		  }-->
+<!--		};-->
+
+<!--		getLocation();-->
+
+<!--	</script>-->
+	<script>
+		$(document).ready(function() {
+		$('#gangnum').click(function () {
+			$.ajax({
+				url: "{% url 'get_map_kakao' id='강남' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					console.log(data)
+					$('#map').remove()
+					$('#folium').append('<div id="map" style="width:100%;height:500px;position: relative;"></div>')
+					gangnum()
+					$('#tableexpensive').empty()
+					var txt = "";
+					var ms = data[0].ms;
+					var place = data[0].place;
+					var location = data[0].location;
+					var add = data[0].add;
+					var tel = data[0].tel;
+					for(var i = 0 ; i<data[0].length; i++){
+						txt +='<tr class="table-body-row">';
+						txt +='<td class="price-week-pred">' + (i+1) + '</td>'
+						txt +='<td class="price-week-pred">' + place[i] + '</td>'
+						txt +='<td class="price-week-pred">' + ms[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + location[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + add[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + tel[i] + '</td>'
+						txt +='</tr>'
+					}
+					$("#tableexpensive").append(txt)
+
+		}})}),
+		$('#gangseo').click(function () {
+			$.ajax({
+				url: "{% url 'get_map_kakao' id='강서' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					console.log(data)
+					$('#map').remove()
+					$('#folium').append('<div id="map" style="width:100%;height:500px;position: relative;"></div>')
+					gangseo()
+					$('#tableexpensive').empty()
+					var txt = "";
+					var ms = data[0].ms;
+					var place = data[0].place;
+					var location = data[0].location;
+					var add = data[0].add;
+					var tel = data[0].tel;
+					for(var i = 0 ; i<data[0].length; i++){
+						txt +='<tr class="table-body-row">';
+						txt +='<td class="price-week-pred">' + (i+1) + '</td>'
+						txt +='<td class="price-week-pred">' + place[i] + '</td>'
+						txt +='<td class="price-week-pred">' + ms[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + location[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + add[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + tel[i] + '</td>'
+						txt +='</tr>'
+					}
+					$("#tableexpensive").append(txt)
+
+		}})}),
+		$('#gangdong').click(function () {
+			$.ajax({
+				url: "{% url 'get_map_kakao' id='강동' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					console.log(data)
+					$('#map').remove()
+					$('#folium').append('<div id="map" style="width:100%;height:500px;position: relative;"></div>')
+					gangdong()
+					$('#tableexpensive').empty()
+					var txt = "";
+					var ms = data[0].ms;
+					var place = data[0].place;
+					var location = data[0].location;
+					var add = data[0].add;
+					var tel = data[0].tel;
+					for(var i = 0 ; i<data[0].length; i++){
+						txt +='<tr class="table-body-row">';
+						txt +='<td class="price-week-pred">' + (i+1) + '</td>'
+						txt +='<td class="price-week-pred">' + place[i] + '</td>'
+						txt +='<td class="price-week-pred">' + ms[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + location[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + add[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + tel[i] + '</td>'
+						txt +='</tr>'
+					}
+					$("#tableexpensive").append(txt)
+
+		}})}),
+		$('#gangbuck').click(function () {
+			$.ajax({
+				url: "{% url 'get_map_kakao' id='강북' %}",
+				data: {'csrfmiddlewaretoken': '{{csrf_token}}'},
+				datatype:'json',
+				type: 'post',
+				success: function (data) {
+					console.log(data)
+					$('#map').remove()
+					$('#folium').append('<div id="map" style="width:100%;height:500px;position: relative;"></div>')
+					gangbuck()
+					$('#tableexpensive').empty()
+					var txt = "";
+					var ms = data[0].ms;
+					var place = data[0].place;
+					var location = data[0].location;
+					var add = data[0].add;
+					var tel = data[0].tel;
+					for(var i = 0 ; i<data[0].length; i++){
+						txt +='<tr class="table-body-row">';
+						txt +='<td class="price-week-pred">' + (i+1) + '</td>'
+						txt +='<td class="price-week-pred">' + place[i] + '</td>'
+						txt +='<td class="price-week-pred">' + ms[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + location[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + add[i] + '</td>'
+						txt +='<td class="price-twodaysago">' + tel[i] + '</td>'
+						txt +='</tr>'
+					}
+					$("#tableexpensive").append(txt)
+
+		}})})});
+	</script>
+	<script>
+// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+function gangbuck(){
+// [강북]
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng(37.590188042536866,  126.98568824091909), // 지도의 중심좌표
+        level: 8 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+// kakao.maps.event.addListener(map, 'center_changed', function() {
+//
+//     // 지도의  레벨을 얻어옵니다
+//     var level = map.getLevel();
+//
+//     // 지도의 중심좌표를 얻어옵니다
+//     var latlng = map.getCenter();
+//
+//     var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
+//     message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
+//
+//     var resultDiv = document.getElementById('result');
+//     resultDiv.innerHTML = message;
+//
+// });
+
+var mapTypeControl = new kakao.maps.MapTypeControl();
+
+// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+var zoomControl = new kakao.maps.ZoomControl();
+map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(17.5, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+var imageSrc2 = "{% static 'assets/img/marker_red.png' %}"// 마커이미지의 주소입니다
+// 마포구
+var markerImage = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(37.568048, 126.897421); // 마커가 표시될 위치입니다
+var markerImage2 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition2 = new kakao.maps.LatLng(37.565185, 126.898476); // 마커가 표시될 위치입니다
+var markerImage3 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition3 = new kakao.maps.LatLng(37.556563, 126.906061); // 마커가 표시될 위치입니다
+// 서대문구
+var markerImage4 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition4 = new kakao.maps.LatLng(37.586246, 126.946435); // 마커가 표시될 위치입니다
+var markerImage5 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition5 = new kakao.maps.LatLng(37.570532, 126.961354); // 마커가 표시될 위치입니다
+var markerImage6 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition6 = new kakao.maps.LatLng(37.590792, 126.943064); // 마커가 표시될 위치입니다
+// 용산구
+var markerImage7 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition7 = new kakao.maps.LatLng(37.533183, 126.96471); // 마커가 표시될 위치입니다
+var markerImage8 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition8 = new kakao.maps.LatLng(37.529598, 126.965545); // 마커가 표시될 위치입니다
+var markerImage9 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition9 = new kakao.maps.LatLng(37.535941, 126.960256); // 마커가 표시될 위치입니다
+var markerImage10 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition10 = new kakao.maps.LatLng(37.550339, 126.976399); // 마커가 표시될 위치입니다
+//종로구
+var markerImage11 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition11 = new kakao.maps.LatLng(37.570314, 126.99934); // 마커가 표시될 위치입니다
+var markerImage12 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition12 = new kakao.maps.LatLng(37.580726, 126.96999); // 마커가 표시될 위치입니다
+// 중구
+var markerImage13 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition13 = new kakao.maps.LatLng(37.559263, 126.977675); // 마커가 표시될 위치입니다
+// 성동구
+var markerImage14 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition14 = new kakao.maps.LatLng(37.539771, 127.053103); // 마커가 표시될 위치입니다
+var markerImage15 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition15 = new kakao.maps.LatLng(37.561966, 127.038392); // 마커가 표시될 위치입니다
+var markerImage16 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition16 = new kakao.maps.LatLng(37.548535, 127.022564); // 마커가 표시될 위치입니다
+var markerImage17 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition17 = new kakao.maps.LatLng(37.538399, 127.053746); // 마커가 표시될 위치입니다
+// 성북구
+var markerImage18 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition18 = new kakao.maps.LatLng(37.610922, 127.029821); // 마커가 표시될 위치입니다
+var markerImage19 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition19 = new kakao.maps.LatLng(37.591914, 127.015948); // 마커가 표시될 위치입니다
+var markerImage20 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition20 = new kakao.maps.LatLng(37.610476, 127.051316); // 마커가 표시될 위치입니다
+// 은평구
+var markerImage21 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition21 = new kakao.maps.LatLng(37.600789,	126.920501); // 마커가 표시될 위치입니다
+var markerImage22 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition22 = new kakao.maps.LatLng(37.586949, 126.917732); // 마커가 표시될 위치입니다
+var markerImage23 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition23 = new kakao.maps.LatLng(37.610648,126.92885); // 마커가 표시될 위치입니다
+// 강북구
+var markerImage24 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition24 = new kakao.maps.LatLng(37.62170524,	127.0269113); // 마커가 표시될 위치입니다
+var markerImage25 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition25 = new kakao.maps.LatLng(37.63174369,	127.0224292); // 마커가 표시될 위치입니다
+var markerImage26 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition26 = new kakao.maps.LatLng(37.61336195,	127.0292368); // 마커가 표시될 위치입니다
+// 노원구
+var markerImage27 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition27 = new kakao.maps.LatLng(37.64006015,	127.0686745); // 마커가 표시될 위치입니다
+var markerImage28 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition28 = new kakao.maps.LatLng(37.62282941,	127.0759262); // 마커가 표시될 위치입니다
+var markerImage29 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition29 = new kakao.maps.LatLng(37.65946811,	127.0700861); // 마커가 표시될 위치입니다
+// 도봉구
+var markerImage30 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition30 = new kakao.maps.LatLng(37.65188753,	127.0469659); // 마커가 표시될 위치입니다
+var markerImage31 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition31 = new kakao.maps.LatLng(37.6650225,	127.0436352); // 마커가 표시될 위치입니다
+var markerImage32 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition32 = new kakao.maps.LatLng(37.66466362,	127.033991); // 마커가 표시될 위치입니다
+var markerImage33 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition33 = new kakao.maps.LatLng(37.63950744,	127.0374343); // 마커가 표시될 위치입니다
+// 동대문구
+var markerImage34 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition34 = new kakao.maps.LatLng(37.57469385,	127.0387406); // 마커가 표시될 위치입니다
+var markerImage35 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition35 = new kakao.maps.LatLng(37.58022891,	127.0388264); // 마커가 표시될 위치입니다
+var markerImage36 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition36 = new kakao.maps.LatLng(37.58201584,	127.0404182); // 마커가 표시될 위치입니다
+//[강북]
+// 마포구
+var marker = new kakao.maps.Marker({
+  position: markerPosition,
+  image: markerImage // 마커이미지 설정
+});
+var marker2 = new kakao.maps.Marker({
+  position: markerPosition2,
+  image: markerImage2 // 마커이미지 설정
+});
+var marker3 = new kakao.maps.Marker({
+  position: markerPosition3,
+  image: markerImage3 // 마커이미지 설정
+});
+// 서대문구
+
+var marker4 = new kakao.maps.Marker({
+  position: markerPosition4,
+  image: markerImage4 // 마커이미지 설정
+});
+var marker5 = new kakao.maps.Marker({
+  position: markerPosition5,
+  image: markerImage5 // 마커이미지 설정
+});
+var marker6 = new kakao.maps.Marker({
+  position: markerPosition6,
+  image: markerImage6 // 마커이미지 설정
+});
+// 용산구
+
+var marker7 = new kakao.maps.Marker({
+  position: markerPosition7,
+  image: markerImage7 // 마커이미지 설정
+});
+var marker8 = new kakao.maps.Marker({
+  position: markerPosition8,
+  image: markerImage8 // 마커이미지 설정
+});
+var marker9 = new kakao.maps.Marker({
+  position: markerPosition9,
+  image: markerImage9 // 마커이미지 설정
+});
+var marker10 = new kakao.maps.Marker({
+  position: markerPosition10,
+  image: markerImage10// 마커이미지 설정
+});
+// 종로구
+var marker11 = new kakao.maps.Marker({
+  position: markerPosition11,
+  image: markerImage11 // 마커이미지 설정
+});
+var marker12 = new kakao.maps.Marker({
+  position: markerPosition12,
+  image: markerImage12// 마커이미지 설정
+});
+// 중구
+var marker13 = new kakao.maps.Marker({
+  position: markerPosition13,
+  image: markerImage13 // 마커이미지 설정
+});
+// 성동구
+var marker14 = new kakao.maps.Marker({
+  position: markerPosition14,
+  image: markerImage14 // 마커이미지 설정
+});
+var marker15 = new kakao.maps.Marker({
+  position: markerPosition15,
+  image: markerImage15 // 마커이미지 설정
+});
+var marker16 = new kakao.maps.Marker({
+  position: markerPosition16,
+  image: markerImage16 // 마커이미지 설정
+});
+var marker17 = new kakao.maps.Marker({
+  position: markerPosition17,
+  image: markerImage17// 마커이미지 설정
+});
+// 성북구
+var marker18 = new kakao.maps.Marker({
+  position: markerPosition18,
+  image: markerImage18 // 마커이미지 설정
+});
+var marker19 = new kakao.maps.Marker({
+  position: markerPosition19,
+  image: markerImage19 // 마커이미지 설정
+});
+var marker20 = new kakao.maps.Marker({
+  position: markerPosition20,
+  image: markerImage20// 마커이미지 설정
+});
+// 은평구
+var marker21 = new kakao.maps.Marker({
+  position: markerPosition21,
+  image: markerImage21 // 마커이미지 설정
+});
+var marker22 = new kakao.maps.Marker({
+  position: markerPosition22,
+  image: markerImage22 // 마커이미지 설정
+});
+var marker23 = new kakao.maps.Marker({
+  position: markerPosition23,
+  image: markerImage23// 마커이미지 설정
+});
+// 강북구
+var marker24 = new kakao.maps.Marker({
+  position: markerPosition24,
+  image: markerImage24 // 마커이미지 설정
+});
+var marker25 = new kakao.maps.Marker({
+  position: markerPosition25,
+  image: markerImage25 // 마커이미지 설정
+});
+var marker26 = new kakao.maps.Marker({
+  position: markerPosition26,
+  image: markerImage26// 마커이미지 설정
+});
+// 노원구
+var marker27 = new kakao.maps.Marker({
+  position: markerPosition27,
+  image: markerImage27 // 마커이미지 설정
+});
+var marker28 = new kakao.maps.Marker({
+  position: markerPosition28,
+  image: markerImage28 // 마커이미지 설정
+});
+var marker29 = new kakao.maps.Marker({
+  position: markerPosition29,
+  image: markerImage29// 마커이미지 설정
+});
+// 도봉구
+var marker30 = new kakao.maps.Marker({
+  position: markerPosition30,
+  image: markerImage30 // 마커이미지 설정
+});
+var marker31 = new kakao.maps.Marker({
+  position: markerPosition31,
+  image: markerImage31 // 마커이미지 설정
+});
+var marker32 = new kakao.maps.Marker({
+  position: markerPosition32,
+  image: markerImage32 // 마커이미지 설정
+});
+var marker33 = new kakao.maps.Marker({
+  position: markerPosition33,
+  image: markerImage33 // 마커이미지 설정
+});
+// 동대문구
+var marker34 = new kakao.maps.Marker({
+  position: markerPosition34,
+  image: markerImage34 // 마커이미지 설정
+});
+var marker35 = new kakao.maps.Marker({
+  position: markerPosition35,
+  image: markerImage35 // 마커이미지 설정
+});
+var marker36 = new kakao.maps.Marker({
+  position: markerPosition36,
+  image: markerImage36 // 마커이미지 설정
+});
+// 마커가 지도 위에 표시되도록 설정합니다
+//[강북]
+// 마포구
+marker.setMap(map);
+marker2.setMap(map);
+marker3.setMap(map);
+// 서대문구
+marker4.setMap(map);
+marker5.setMap(map);
+marker6.setMap(map);
+// 용산구
+marker7.setMap(map);
+marker8.setMap(map);
+marker9.setMap(map);
+marker10.setMap(map);
+// 종로구
+marker11.setMap(map);
+marker12.setMap(map);
+// 중구
+marker13.setMap(map);
+// 성동구
+marker14.setMap(map);
+marker15.setMap(map);
+marker16.setMap(map);
+marker17.setMap(map);
+// 성북구
+marker18.setMap(map);
+marker19.setMap(map);
+marker20.setMap(map);
+// 은평구
+marker21.setMap(map);
+marker22.setMap(map);
+marker23.setMap(map);
+// 강북구
+marker24.setMap(map);
+marker25.setMap(map);
+marker26.setMap(map);
+// 노원구
+marker27.setMap(map);
+marker28.setMap(map);
+marker29.setMap(map);
+// 도봉구
+marker30.setMap(map);
+marker31.setMap(map);
+marker32.setMap(map);
+marker33.setMap(map);
+// 동대문구
+marker34.setMap(map);
+marker35.setMap(map);
+marker36.setMap(map);
+// 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+//[강북]
+// 마포구
+var content =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=21408049"  target="_blank">' +
+    '    <span class="title" >홈플러스 월드컵점</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content2 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=11085933" target="_blank">' +
+    '    <span class="title">마포농산물시장</span>' +
+    '  </a>' +
+    '</div>';
+var content3 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18526234" target="_blank">' +
+    '    <span class="title">망원시장</span>' +
+    '  </a>' +
+    '</div>';
+// 서대문구
+var content4 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=17363328" target="_blank">' +
+    '    <span class="title" >롯데슈퍼</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content5 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=10640966" target="_blank">' +
+    '    <span class="title">영천시장</span>' +
+    '  </a>' +
+    '</div>';
+var content6 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8049579"target="_blank">' +
+    '    <span class="title">인왕시장</span>' +
+    '  </a>' +
+    '</div>';
+// 용산구
+var content7 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8131337" target="_blank">' +
+    '    <span class="title" >농협하나로마트</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content8 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=10751938" target="_blank">' +
+    '    <span class="title">이마트</span>' +
+    '  </a>' +
+    '</div>';
+var content9 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8462849" target="_blank">' +
+    '    <span class="title">용문시장</span>' +
+    '  </a>' +
+    '</div>';
+var content10 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524602" target="_blank">' +
+    '    <span class="title">후암시장</span>' +
+    '  </a>' +
+    '</div>';
+// 종로구
+var content11 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8462849" target="_blank">' +
+    '    <span class="title">광장시장</span>' +
+    '  </a>' +
+    '</div>';
+var content12 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524602" target="_blank">' +
+    '    <span class="title">통인시장</span>' +
+    '  </a>' +
+    '</div>';
+// 중구
+var content13 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=7934963" target="_blank">' +
+    '    <span class="title">남대문시장</span>' +
+    '  </a>' +
+    '</div>';
+// 성동구
+var content14 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8046417" target="_blank">' +
+    '    <span class="title" >이마트_성수</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content15 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8047104" target="_blank">' +
+    '    <span class="title">이마트_왕십리</span>' +
+    '  </a>' +
+    '</div>';
+var content16 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=11031501" target="_blank">' +
+    '    <span class="title">금남시장</span>' +
+    '  </a>' +
+    '</div>';
+var content17 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8280190" target="_blank">' +
+    '    <span class="title">뚝도시장</span>' +
+    '  </a>' +
+    '</div>';
+// 성북구
+var content18 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8041315"  target="_blank">' +
+    '    <span class="title">이마트 미아점</span>' +
+    '  </a>' +
+    '</div>';
+var content19 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=23287376" target="_blank">' +
+    '    <span class="title">돈암제일시장</span>' +
+    '  </a>' +
+    '</div>';
+var content20 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=14918316" target="_blank">' +
+    '    <span class="title">장위전통시장</span>' +
+    '  </a>' +
+    '</div>';
+// 은평구
+var content21 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=21128108" target="_blank">' +
+    '    <span class="title">이마트 은평점</span>' +
+    '  </a>' +
+    '</div>';
+var content22 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8287165"  target="_blank">' +
+    '    <span class="title">대림시장</span>' +
+    '  </a>' +
+    '</div>';
+var content23 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=20543877" target="_blank">' +
+    '    <span class="title">대조전통시장</span>' +
+    '  </a>' +
+    '</div>';
+// 강북구
+var content24 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=906761399"  target="_blank">' +
+    '    <span class="title">하나로클럽 미아점</span>' +
+    '  </a>' +
+    '</div>';
+var content25 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=27367375" target="_blank">' +
+    '    <span class="title">수유재래시장</span>' +
+    '  </a>' +
+    '</div>';
+var content26 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524799"  target="_blank">' +
+    '    <span class="title">숭인시장</span>' +
+    '  </a>' +
+    '</div>';
+// 노원구
+var content27 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=17163867"  target="_blank">' +
+    '    <span class="title">홈플러스 중계점</span>' +
+    '  </a>' +
+    '</div>';
+var content28 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524617"  target="_blank">' +
+    '    <span class="title">공릉도깨비시장</span>' +
+    '  </a>' +
+    '</div>';
+var content29 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524651"  target="_blank">' +
+    '    <span class="title">상계중앙시장</span>' +
+    '  </a>' +
+    '</div>';
+// 도봉구
+var content30 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8046583" target="_blank">' +
+    '    <span class="title">이마트 창동점</span>' +
+    '  </a>' +
+    '</div>';
+var content31 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8165508" target="_blank">' +
+    '    <span class="title">홈플러스 방학점</span>' +
+    '  </a>' +
+    '</div>';
+var content32 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=7887852"  target="_blank">' +
+    '    <span class="title">방학동 도깨비시장</span>' +
+    '  </a>' +
+    '</div>';
+var content33 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=17646278" target="_blank">' +
+    '    <span class="title">신창시장</span>' +
+    '  </a>' +
+    '</div>';
+// 도봉구
+var content34 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8160000" target="_blank">' +
+    '    <span class="title">홈플러스 동대문점</span>' +
+    '  </a>' +
+    '</div>';
+var content35 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=10174942"  target="_blank">' +
+    '    <span class="title">경동시장</span>' +
+    '  </a>' +
+    '</div>';
+var content36 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524790"  target="_blank">' +
+    '    <span class="title">청량리 종합시장</span>' +
+    '  </a>' +
+    '</div>';
+// 커스텀 오버레이가 표시될 위치입니다
+// [경북]
+// 마포구
+var position = new kakao.maps.LatLng(37.568048, 126.897421);
+var position2 = new kakao.maps.LatLng(37.565185, 126.898476);
+var position3 = new kakao.maps.LatLng(37.556563, 126.906061);
+
+
+// 서대문구
+var position4 = new kakao.maps.LatLng(37.586246, 126.946435);
+var position5 = new kakao.maps.LatLng(37.570532, 126.961354);
+var position6 = new kakao.maps.LatLng(37.590792, 126.943064);
+// 용산구
+var position7 = new kakao.maps.LatLng(37.533183, 126.96471);
+var position8 = new kakao.maps.LatLng(37.529598, 126.965545);
+var position9 = new kakao.maps.LatLng(37.535941, 126.960256);
+var position10 = new kakao.maps.LatLng(37.550339, 126.976399);
+// 종로구
+var position11 = new kakao.maps.LatLng(37.570314, 126.99934);
+var position12 = new kakao.maps.LatLng(37.580726, 126.96999);
+// 중구
+var position13 = new kakao.maps.LatLng(37.559263, 126.977675);
+// 성동구
+var position14 = new kakao.maps.LatLng(37.539771, 127.053103);
+var position15 = new kakao.maps.LatLng(37.561966, 127.038392);
+var position16 = new kakao.maps.LatLng(37.548535, 127.022564);
+var position17 = new kakao.maps.LatLng(37.538399, 127.053746);
+// 성북구
+var position18 = new kakao.maps.LatLng(37.610922, 127.029821);
+var position19 = new kakao.maps.LatLng(37.591914, 127.015948);
+var position20 = new kakao.maps.LatLng(37.610476, 127.051316);
+// 은평구
+var position21 = new kakao.maps.LatLng(37.600789, 126.920501);
+var position22 = new kakao.maps.LatLng(37.586949, 126.917732);
+var position23 = new kakao.maps.LatLng(37.610648, 126.92885);
+// 강북구
+var position24 = new kakao.maps.LatLng(37.62170524,	127.0269113);
+var position25 = new kakao.maps.LatLng(37.63174369,	127.0224292);
+var position26 = new kakao.maps.LatLng(37.61336195,	127.0292368);
+// 노원구
+var position27 = new kakao.maps.LatLng(37.64006015,	127.0686745);
+var position28 = new kakao.maps.LatLng(37.62282941,	127.0759262);
+var position29 = new kakao.maps.LatLng(37.65946811,	127.0700861);
+// 도봉구
+var position30 = new kakao.maps.LatLng(37.65188753,	127.0469659);
+var position31 = new kakao.maps.LatLng(37.6650225,	127.0436352);
+var position32 = new kakao.maps.LatLng(37.66466362,	127.033991);
+var position33 = new kakao.maps.LatLng(37.63950744,	127.0374343);
+// 동대문구
+var position34 = new kakao.maps.LatLng(37.57469385,	127.0387406);
+var position35 = new kakao.maps.LatLng(37.58022891,	127.0388264);
+var position36 = new kakao.maps.LatLng(37.58201584,	127.0404182);
+// 커스텀 오버레이를 생성합니다
+//[강북]
+// 마포구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position,
+    content: content,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position2,
+    content: content2,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position3,
+    content: content3,
+    yAnchor: 1
+});
+//서대문구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position4,
+    content: content4,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position5,
+    content: content5,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position6,
+    content: content6,
+    yAnchor: 1
+});
+// 용산구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position7,
+    content: content7,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position8,
+    content: content8,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position9,
+    content: content9,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position10,
+    content: content10,
+    yAnchor: 1
+});
+// 종로구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position11,
+    content: content11,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position12,
+    content: content12,
+    yAnchor: 1
+});
+// 중구
+
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position13,
+    content: content13,
+    yAnchor: 1
+});
+// 성동구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position14,
+    content: content14,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position15,
+    content: content15,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position16,
+    content: content16,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position17,
+    content: content17,
+    yAnchor: 1
+});
+// 성북구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position18,
+    content: content18,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position19,
+    content: content19,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position20,
+    content: content20,
+    yAnchor: 1
+});
+// 은평구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position21,
+    content: content21,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position22,
+    content: content22,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position23,
+    content: content23,
+    yAnchor: 1
+});
+// 강북구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position24,
+    content: content24,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position25,
+    content: content25,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position26,
+    content: content26,
+    yAnchor: 1
+});
+// 노원구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position27,
+    content: content27,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position28,
+    content: content28,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position29,
+    content: content29,
+    yAnchor: 1
+});
+// 도봉구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position30,
+    content: content30,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position31,
+    content: content31,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position32,
+    content: content32,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position33,
+    content: content33,
+    yAnchor: 1
+});
+// 동대문구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position34,
+    content: content34,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position35,
+    content: content35,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position36,
+    content: content36,
+    yAnchor: 1
+});
+var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
+var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
+var clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
+var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
+var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
+
+// 지도에 클릭 이벤트를 등록합니다
+// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+
+    // 마우스로 클릭한 위치입니다
+    var clickPosition = mouseEvent.latLng;
+
+    // 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
+    if (!drawingFlag) {
+
+        // 상태를 true로, 선이 그리고있는 상태로 변경합니다
+        drawingFlag = true;
+
+        // 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+        deleteClickLine();
+
+        // 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+        deleteDistnce();
+
+        // 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+        deleteCircleDot();
+
+        // 클릭한 위치를 기준으로 선을 생성하고 지도위에 표시합니다
+        clickLine = new kakao.maps.Polyline({
+            map: map, // 선을 표시할 지도입니다
+            path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 선이 그려지고 있을 때 마우스 움직임에 따라 선이 그려질 위치를 표시할 선을 생성합니다
+        moveLine = new kakao.maps.Polyline({
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 0.5, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 클릭한 지점에 대한 정보를 지도에 표시합니다
+        displayCircleDot(clickPosition, 0);
+
+
+    } else { // 선이 그려지고 있는 상태이면
+
+        // 그려지고 있는 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 좌표 배열에 클릭한 위치를 추가합니다
+        path.push(clickPosition);
+
+        // 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+        clickLine.setPath(path);
+
+        var distance = Math.round(clickLine.getLength());
+        displayCircleDot(clickPosition, distance);
+    }
+});
+
+// 지도에 마우스무브 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스무브 이벤트가 발생하면 그려질 선의 위치를 동적으로 보여주도록 합니다
+kakao.maps.event.addListener(map, 'mousemove', function (mouseEvent) {
+
+    // 지도 마우스무브 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag){
+
+        // 마우스 커서의 현재 위치를 얻어옵니다
+        var mousePosition = mouseEvent.latLng;
+
+        // 마우스 클릭으로 그려진 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 마우스 클릭으로 그려진 마지막 좌표와 마우스 커서 위치의 좌표로 선을 표시합니다
+        var movepath = [path[path.length-1], mousePosition];
+        moveLine.setPath(movepath);
+        moveLine.setMap(map);
+
+        var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
+            content = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+
+        // 거리정보를 지도에 표시합니다
+        showDistance(content, mousePosition);
+    }
+});
+
+// 지도에 마우스 오른쪽 클릭 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스 오른쪽 클릭 이벤트가 발생하면 선 그리기를 종료합니다
+kakao.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+
+    // 지도 오른쪽 클릭 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag) {
+
+        // 마우스무브로 그려진 선은 지도에서 제거합니다
+        moveLine.setMap(null);
+        moveLine = null;
+
+        // 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 선을 구성하는 좌표의 개수가 2개 이상이면
+        if (path.length > 1) {
+
+            // 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
+            if (dots[dots.length-1].distance) {
+                dots[dots.length-1].distance.setMap(null);
+                dots[dots.length-1].distance = null;
+            }
+
+            var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
+                content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
+
+            // 그려진 선의 거리정보를 지도에 표시합니다
+            showDistance(content, path[path.length-1]);
+
+        } else {
+
+            // 선을 구성하는 좌표의 개수가 1개 이하이면
+            // 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
+            deleteClickLine();
+            deleteCircleDot();
+            deleteDistnce();
+
+        }
+
+        // 상태를 false로, 그리지 않고 있는 상태로 변경합니다
+        drawingFlag = false;
+    }
+});
+
+// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
+function deleteClickLine() {
+    if (clickLine) {
+        clickLine.setMap(null);
+        clickLine = null;
+    }
+}
+
+// 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
+// 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+function showDistance(content, position) {
+
+    if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
+
+        // 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
+        distanceOverlay.setPosition(position);
+        distanceOverlay.setContent(content);
+
+    } else { // 커스텀 오버레이가 생성되지 않은 상태이면
+
+        // 커스텀 오버레이를 생성하고 지도에 표시합니다
+        distanceOverlay = new kakao.maps.CustomOverlay({
+            map: map, // 커스텀오버레이를 표시할 지도입니다
+            content: content,  // 커스텀오버레이에 표시할 내용입니다
+            position: position, // 커스텀오버레이를 표시할 위치입니다.
+            xAnchor: 0,
+            yAnchor: 0,
+            zIndex: 3
+        });
+    }
+}
+
+// 그려지고 있는 선의 총거리 정보와
+// 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
+function deleteDistnce () {
+    if (distanceOverlay) {
+        distanceOverlay.setMap(null);
+        distanceOverlay = null;
+    }
+}
+
+// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
+function displayCircleDot(position, distance) {
+
+    // 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
+    var circleOverlay = new kakao.maps.CustomOverlay({
+        content: '<span class="dot"></span>',
+        position: position,
+        zIndex: 1
+    });
+
+    // 지도에 표시합니다
+    circleOverlay.setMap(map);
+
+    if (distance > 0) {
+        // 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
+        var distanceOverlay = new kakao.maps.CustomOverlay({
+            content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
+            position: position,
+            yAnchor: 1,
+            zIndex: 2
+        });
+
+        // 지도에 표시합니다
+        distanceOverlay.setMap(map);
+    }
+
+    // 배열에 추가합니다
+    dots.push({circle:circleOverlay, distance: distanceOverlay});
+}
+
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
+function deleteCircleDot() {
+    var i;
+
+    for ( i = 0; i < dots.length; i++ ){
+        if (dots[i].circle) {
+            dots[i].circle.setMap(null);
+        }
+
+        if (dots[i].distance) {
+            dots[i].distance.setMap(null);
+        }
+    }
+
+    dots = [];
+}
+
+// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
+// 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
+// HTML Content를 만들어 리턴하는 함수입니다
+function getTimeHTML(distance) {
+
+    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+    var walkkTime = distance / 67 | 0;
+    var walkHour = '', walkMin = '';
+
+    // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+    if (walkkTime > 60) {
+        walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
+    }
+    walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
+
+    // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+    var bycicleTime = distance / 227 | 0;
+    var bycicleHour = '', bycicleMin = '';
+
+    // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+    if (bycicleTime > 60) {
+        bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
+    }
+    bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
+
+    // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
+    var content = '<ul class="dotOverlay distanceInfo">';
+    content += '    <li>';
+    content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">도보</span>' + walkHour + walkMin;
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+    content += '    </li>';
+    content += '</ul>'
+
+    return content;
+};
+};
+
+// [강서]
+function gangseo(){
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng( 37.538971256704606,126.90151559963451), // 지도의 중심좌표
+        level: 8 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+// kakao.maps.event.addListener(map, 'center_changed', function() {
+//
+//     // 지도의  레벨을 얻어옵니다
+//     var level = map.getLevel();
+//
+//     // 지도의 중심좌표를 얻어옵니다
+//     var latlng = map.getCenter();
+//
+//     var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
+//     message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
+//
+//     var resultDiv = document.getElementById('result');
+//     resultDiv.innerHTML = message;
+//
+// });
+
+var mapTypeControl = new kakao.maps.MapTypeControl();
+
+// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+var zoomControl = new kakao.maps.ZoomControl();
+map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(17.5, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+var imageSrc2 = "{% static 'assets/img/marker_red.png' %}"
+// 영등포구
+var markerImage = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(37.518719, 126.926473); // 마커가 표시될 위치입니다
+var markerImage2 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition2 = new kakao.maps.LatLng(37.519685, 126.907069); // 마커가 표시될 위치입니다
+var markerImage3 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition3 = new kakao.maps.LatLng(37.491576, 126.899935); // 마커가 표시될 위치입니다
+var markerImage4 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition4 = new kakao.maps.LatLng(37.519682, 126.907055); // 마커가 표시될 위치입니다
+// 양천구
+var markerImage5 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition5 = new kakao.maps.LatLng(37.525573, 126.870917); // 마커가 표시될 위치입니다
+var markerImage6 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition6 = new kakao.maps.LatLng(37.530438, 126.873167); // 마커가 표시될 위치입니다
+var markerImage7 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition7 = new kakao.maps.LatLng(37.548333, 126.865248); // 마커가 표시될 위치입니다
+// 강서구
+var markerImage8 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition8 = new kakao.maps.LatLng(37.55837941,	126.861691); // 마커가 표시될 위치입니다
+var markerImage9 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition9 = new kakao.maps.LatLng(37.56042098,	126.8462438); // 마커가 표시될 위치입니다
+var markerImage10 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition10 = new kakao.maps.LatLng(37.54822512,	126.8352821); // 마커가 표시될 위치입니다
+var markerImage11 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition11 = new kakao.maps.LatLng(37.54302433,	126.8440199); // 마커가 표시될 위치입니다
+//관악구
+var markerImage12 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition12 = new kakao.maps.LatLng(37.47449346,	126.9176036); // 마커가 표시될 위치입니다
+var markerImage13 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition13 = new kakao.maps.LatLng(37.48783807,	126.9164302); // 마커가 표시될 위치입니다
+var markerImage14 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition14 = new kakao.maps.LatLng(37.48181898,	126.9283657); // 마커가 표시될 위치입니다
+var markerImage15 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition15 = new kakao.maps.LatLng(37.47448946,	126.9659222); // 마커가 표시될 위치입니다
+// 구로구
+var markerImage16 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition16 = new kakao.maps.LatLng(37.50728106,	126.8901611); // 마커가 표시될 위치입니다
+var markerImage17 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition17 = new kakao.maps.LatLng(37.50236688,	126.8499785); // 마커가 표시될 위치입니다
+var markerImage18 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition18 = new kakao.maps.LatLng(37.49042138,	126.8860419); // 마커가 표시될 위치입니다
+// 금천구
+var markerImage19 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition19 = new kakao.maps.LatLng(37.46882663,	126.8968974); // 마커가 표시될 위치입니다
+var markerImage20 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition20 = new kakao.maps.LatLng(37.4522322,	126.900714); // 마커가 표시될 위치입니다
+var markerImage21 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition21 = new kakao.maps.LatLng(37.47389981,	126.9006698); // 마커가 표시될 위치입니다
+var markerImage22 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition22 = new kakao.maps.LatLng(37.45772432,	126.9047863); // 마커가 표시될 위치입니다
+// 동작구
+var markerImage23 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition23 = new kakao.maps.LatLng(37.48922509,	126.9805799); // 마커가 표시될 위치입니다
+// 영등포구
+var marker = new kakao.maps.Marker({
+  position: markerPosition,
+  image: markerImage // 마커이미지 설정
+});
+var marker2 = new kakao.maps.Marker({
+  position: markerPosition2,
+  image: markerImage2 // 마커이미지 설정
+});
+var marker3 = new kakao.maps.Marker({
+  position: markerPosition3,
+  image: markerImage3 // 마커이미지 설정
+});
+
+var marker4 = new kakao.maps.Marker({
+  position: markerPosition4,
+  image: markerImage4 // 마커이미지 설정
+});
+
+// 양천구
+var marker5 = new kakao.maps.Marker({
+  position: markerPosition5,
+  image: markerImage5 // 마커이미지 설정
+});
+var marker6 = new kakao.maps.Marker({
+  position: markerPosition6,
+  image: markerImage6 // 마커이미지 설정
+});
+var marker7 = new kakao.maps.Marker({
+  position: markerPosition7,
+  image: markerImage7 // 마커이미지 설정
+});
+// 강서구
+var marker8 = new kakao.maps.Marker({
+  position: markerPosition8,
+  image: markerImage8 // 마커이미지 설정
+});
+var marker9 = new kakao.maps.Marker({
+  position: markerPosition9,
+  image: markerImage9 // 마커이미지 설정
+});
+var marker10 = new kakao.maps.Marker({
+  position: markerPosition10,
+  image: markerImage10// 마커이미지 설정
+});
+var marker11 = new kakao.maps.Marker({
+  position: markerPosition11,
+  image: markerImage11 // 마커이미지 설정
+});
+// 관악구
+var marker12 = new kakao.maps.Marker({
+  position: markerPosition12,
+  image: markerImage12// 마커이미지 설정
+});
+var marker13 = new kakao.maps.Marker({
+  position: markerPosition13,
+  image: markerImage13 // 마커이미지 설정
+});
+var marker14 = new kakao.maps.Marker({
+  position: markerPosition14,
+  image: markerImage14 // 마커이미지 설정
+});
+var marker15 = new kakao.maps.Marker({
+  position: markerPosition15,
+  image: markerImage15 // 마커이미지 설정
+});
+// 구로구
+var marker16 = new kakao.maps.Marker({
+  position: markerPosition16,
+  image: markerImage16 // 마커이미지 설정
+});
+var marker17 = new kakao.maps.Marker({
+  position: markerPosition17,
+  image: markerImage17// 마커이미지 설정
+});
+var marker18 = new kakao.maps.Marker({
+  position: markerPosition18,
+  image: markerImage18 // 마커이미지 설정
+});
+// 금천구
+var marker19 = new kakao.maps.Marker({
+  position: markerPosition19,
+  image: markerImage19 // 마커이미지 설정
+});
+var marker20 = new kakao.maps.Marker({
+  position: markerPosition20,
+  image: markerImage20// 마커이미지 설정
+});
+var marker21 = new kakao.maps.Marker({
+  position: markerPosition21,
+  image: markerImage21 // 마커이미지 설정
+});
+var marker22 = new kakao.maps.Marker({
+  position: markerPosition22,
+  image: markerImage22// 마커이미지 설정
+});
+// 동작구
+var marker23 = new kakao.maps.Marker({
+  position: markerPosition23,
+  image: markerImage23// 마커이미지 설정
+});
+// 마커가 지도 위에 표시되도록 설정합니다
+// 영등포구
+marker.setMap(map);
+marker2.setMap(map);
+marker3.setMap(map);
+marker4.setMap(map);
+
+// 양천구
+marker5.setMap(map);
+marker6.setMap(map);
+marker7.setMap(map);
+// 강서구
+marker8.setMap(map);
+marker9.setMap(map);
+marker10.setMap(map);
+marker11.setMap(map);
+// 관악구
+marker12.setMap(map);
+marker13.setMap(map);
+marker14.setMap(map);
+marker15.setMap(map);
+// 구로구
+marker16.setMap(map);
+marker17.setMap(map);
+marker18.setMap(map);
+// 금천구
+marker19.setMap(map);
+marker20.setMap(map);
+marker21.setMap(map);
+marker22.setMap(map);
+// 동작구
+marker23.setMap(map);
+// 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+// 영등포구
+var content =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8227100"  target="_blank">' +
+    '    <span class="title" >이마트 영등포점</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content2 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=11202128"   target="_blank">' +
+    '    <span class="title">홈플러스 영등포점</span>' +
+    '  </a>' +
+    '</div>';
+var content3 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8304829"  target="_blank">' +
+    '    <span class="title">대림중앙시장</span>' +
+    '  </a>' +
+    '</div>';
+var content4 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18526246"  target="_blank">' +
+    '    <span class="title" >영등포재래시장</span>' +
+    '  </a>' +
+    '</div>'
+	;
+
+// 양천구
+var content5 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8047162" target="_blank">' +
+    '    <span class="title">이마트 목동점</span>' +
+    '  </a>' +
+    '</div>';
+var content6 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=10968003"  target="_blank">' +
+    '    <span class="title">홈플러스 스페셜 목동점</span>' +
+    '  </a>' +
+    '</div>';
+var content7 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18526239"  target="_blank">' +
+    '    <span class="title" >목동깨비시장</span>' +
+    '  </a>' +
+    '</div>'
+	;
+// 강서구
+var content8 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8046155" target="_blank">' +
+    '    <span class="title">이마트 가양점</span>' +
+    '  </a>' +
+    '</div>';
+var content9 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=11779672" target="_blank">' +
+    '    <span class="title">홈플러스 등촌점</span>' +
+    '  </a>' +
+    '</div>';
+var content10 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=1705025222" target="_blank">' +
+    '    <span class="title">송화시장</span>' +
+    '  </a>' +
+    '</div>';
+var content11 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=12728903"  target="_blank">' +
+    '    <span class="title">화곡본동시장</span>' +
+    '  </a>' +
+    '</div>';
+// 관악구
+var content12 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=16414080"  target="_blank">' +
+    '    <span class="title">세이브마트</span>' +
+    '  </a>' +
+    '</div>';
+var content13 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18526253"  target="_blank">' +
+    '    <span class="title">관악신사시장(신림4동)</span>' +
+    '  </a>' +
+    '</div>';
+var content14 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=12656890" target="_blank">' +
+    '    <span class="title" >신원시장(신림1동)</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content15 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524675" target="_blank">' +
+    '    <span class="title">원당종합시장</span>' +
+    '  </a>' +
+    '</div>';
+// 구로구
+var content16 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8532478" target="_blank">' +
+    '    <span class="title">이마트 신도림점</span>' +
+    '  </a>' +
+    '</div>';
+var content17 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524814" target="_blank">' +
+    '    <span class="title">고척근린시장</span>' +
+    '  </a>' +
+    '</div>';
+var content18 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=27494423" target="_blank">' +
+    '    <span class="title">남구로시장</span>' +
+    '  </a>' +
+    '</div>';
+// 금천구
+var content19 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8177044" target="_blank">' +
+    '    <span class="title">홈플러스 금천점</span>' +
+    '  </a>' +
+    '</div>';
+var content20 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8155382"  target="_blank">' +
+    '    <span class="title">홈플러스 스페셜 시흥점</span>' +
+    '  </a>' +
+    '</div>';
+var content21 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=20544277"  target="_blank">' +
+    '    <span class="title">남문시장</span>' +
+    '  </a>' +
+    '</div>';
+var content22 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=12728903"  target="_blank">' +
+    '    <span class="title">현대시장</span>' +
+    '  </a>' +
+    '</div>';
+// 동작구
+var content23 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=627492949" target="_blank">' +
+    '    <span class="title">남성시장</span>' +
+    '  </a>' +
+    '</div>';
+
+
+
+
+// 커스텀 오버레이가 표시될 위치입니다
+// 영등포구
+var position = new kakao.maps.LatLng(37.518719,	126.926473);
+var position2 = new kakao.maps.LatLng(37.519685,126.907069);
+var position3 = new kakao.maps.LatLng(37.491576,126.899935);
+var position4 = new kakao.maps.LatLng(37.519682,126.907055);
+
+// 양천구
+var position5 = new kakao.maps.LatLng(37.525573,126.870917);
+var position6 = new kakao.maps.LatLng(37.530438, 126.873167);
+var position7 = new kakao.maps.LatLng(37.548333,126.865248);
+// 강서구
+var position8 = new kakao.maps.LatLng(37.55837941,	126.861691);
+var position9 = new kakao.maps.LatLng(37.56042098,	126.8462438);
+var position10 = new kakao.maps.LatLng(37.54822512,	126.8352821);
+var position11 = new kakao.maps.LatLng(37.54302433,	126.8440199);
+// 관악구
+var position12 = new kakao.maps.LatLng(37.47449346,	126.9176036);
+var position13 = new kakao.maps.LatLng(37.48783807,	126.9164302);
+var position14 = new kakao.maps.LatLng(37.48181898,	126.9283657);
+var position15 = new kakao.maps.LatLng(37.47448946,	126.9659222);
+// 구로구
+var position16 = new kakao.maps.LatLng(37.50728106,	126.8901611);
+var position17 = new kakao.maps.LatLng(37.50236688,	126.8499785);
+var position18 = new kakao.maps.LatLng(37.49042138,	126.8860419);
+// 금천구
+var position19 = new kakao.maps.LatLng(37.46882663,	126.8968974);
+var position20 = new kakao.maps.LatLng(37.4522322,	126.900714);
+var position21 = new kakao.maps.LatLng(37.47389981,	126.9006698);
+var position22 = new kakao.maps.LatLng(37.45772432,	126.9047863);
+// 동작구
+var position23 = new kakao.maps.LatLng(37.48922509,	126.9805799);
+// 커스텀 오버레이를 생성합니다
+// 영등포구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position,
+    content: content,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position2,
+    content: content2,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position3,
+    content: content3,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position4,
+    content: content4,
+    yAnchor: 1,
+});
+//양천구
+
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position5,
+    content: content5,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position6,
+    content: content6,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position7,
+    content: content7,
+    yAnchor: 1,
+});
+// 강서구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position8,
+    content: content8,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position9,
+    content: content9,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position10,
+    content: content10,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position11,
+    content: content11,
+    yAnchor: 1
+});
+// 관악구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position12,
+    content: content12,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position13,
+    content: content13,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position14,
+    content: content14,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position15,
+    content: content15,
+    yAnchor: 1
+});
+// 구로구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position16,
+    content: content16,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position17,
+    content: content17,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position18,
+    content: content18,
+    yAnchor: 1
+});
+// 금천구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position19,
+    content: content19,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position20,
+    content: content20,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position21,
+    content: content21,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position22,
+    content: content22,
+    yAnchor: 1
+});
+// 동작구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position23,
+    content: content23,
+    yAnchor: 1
+});
+var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
+var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
+var clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
+var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
+var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
+
+// 지도에 클릭 이벤트를 등록합니다
+// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+
+    // 마우스로 클릭한 위치입니다
+    var clickPosition = mouseEvent.latLng;
+
+    // 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
+    if (!drawingFlag) {
+
+        // 상태를 true로, 선이 그리고있는 상태로 변경합니다
+        drawingFlag = true;
+
+        // 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+        deleteClickLine();
+
+        // 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+        deleteDistnce();
+
+        // 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+        deleteCircleDot();
+
+        // 클릭한 위치를 기준으로 선을 생성하고 지도위에 표시합니다
+        clickLine = new kakao.maps.Polyline({
+            map: map, // 선을 표시할 지도입니다
+            path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 선이 그려지고 있을 때 마우스 움직임에 따라 선이 그려질 위치를 표시할 선을 생성합니다
+        moveLine = new kakao.maps.Polyline({
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 0.5, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 클릭한 지점에 대한 정보를 지도에 표시합니다
+        displayCircleDot(clickPosition, 0);
+
+
+    } else { // 선이 그려지고 있는 상태이면
+
+        // 그려지고 있는 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 좌표 배열에 클릭한 위치를 추가합니다
+        path.push(clickPosition);
+
+        // 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+        clickLine.setPath(path);
+
+        var distance = Math.round(clickLine.getLength());
+        displayCircleDot(clickPosition, distance);
+    }
+});
+
+// 지도에 마우스무브 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스무브 이벤트가 발생하면 그려질 선의 위치를 동적으로 보여주도록 합니다
+kakao.maps.event.addListener(map, 'mousemove', function (mouseEvent) {
+
+    // 지도 마우스무브 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag){
+
+        // 마우스 커서의 현재 위치를 얻어옵니다
+        var mousePosition = mouseEvent.latLng;
+
+        // 마우스 클릭으로 그려진 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 마우스 클릭으로 그려진 마지막 좌표와 마우스 커서 위치의 좌표로 선을 표시합니다
+        var movepath = [path[path.length-1], mousePosition];
+        moveLine.setPath(movepath);
+        moveLine.setMap(map);
+
+        var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
+            content = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+
+        // 거리정보를 지도에 표시합니다
+        showDistance(content, mousePosition);
+    }
+});
+
+// 지도에 마우스 오른쪽 클릭 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스 오른쪽 클릭 이벤트가 발생하면 선 그리기를 종료합니다
+kakao.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+
+    // 지도 오른쪽 클릭 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag) {
+
+        // 마우스무브로 그려진 선은 지도에서 제거합니다
+        moveLine.setMap(null);
+        moveLine = null;
+
+        // 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 선을 구성하는 좌표의 개수가 2개 이상이면
+        if (path.length > 1) {
+
+            // 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
+            if (dots[dots.length-1].distance) {
+                dots[dots.length-1].distance.setMap(null);
+                dots[dots.length-1].distance = null;
+            }
+
+            var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
+                content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
+
+            // 그려진 선의 거리정보를 지도에 표시합니다
+            showDistance(content, path[path.length-1]);
+
+        } else {
+
+            // 선을 구성하는 좌표의 개수가 1개 이하이면
+            // 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
+            deleteClickLine();
+            deleteCircleDot();
+            deleteDistnce();
+
+        }
+
+        // 상태를 false로, 그리지 않고 있는 상태로 변경합니다
+        drawingFlag = false;
+    }
+});
+
+// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
+function deleteClickLine() {
+    if (clickLine) {
+        clickLine.setMap(null);
+        clickLine = null;
+    }
+}
+
+// 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
+// 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+function showDistance(content, position) {
+
+    if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
+
+        // 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
+        distanceOverlay.setPosition(position);
+        distanceOverlay.setContent(content);
+
+    } else { // 커스텀 오버레이가 생성되지 않은 상태이면
+
+        // 커스텀 오버레이를 생성하고 지도에 표시합니다
+        distanceOverlay = new kakao.maps.CustomOverlay({
+            map: map, // 커스텀오버레이를 표시할 지도입니다
+            content: content,  // 커스텀오버레이에 표시할 내용입니다
+            position: position, // 커스텀오버레이를 표시할 위치입니다.
+            xAnchor: 0,
+            yAnchor: 0,
+            zIndex: 3
+        });
+    }
+}
+
+// 그려지고 있는 선의 총거리 정보와
+// 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
+function deleteDistnce () {
+    if (distanceOverlay) {
+        distanceOverlay.setMap(null);
+        distanceOverlay = null;
+    }
+}
+
+// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
+function displayCircleDot(position, distance) {
+
+    // 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
+    var circleOverlay = new kakao.maps.CustomOverlay({
+        content: '<span class="dot"></span>',
+        position: position,
+        zIndex: 1
+    });
+
+    // 지도에 표시합니다
+    circleOverlay.setMap(map);
+
+    if (distance > 0) {
+        // 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
+        var distanceOverlay = new kakao.maps.CustomOverlay({
+            content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
+            position: position,
+            yAnchor: 1,
+            zIndex: 2
+        });
+
+        // 지도에 표시합니다
+        distanceOverlay.setMap(map);
+    }
+
+    // 배열에 추가합니다
+    dots.push({circle:circleOverlay, distance: distanceOverlay});
+}
+
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
+function deleteCircleDot() {
+    var i;
+
+    for ( i = 0; i < dots.length; i++ ){
+        if (dots[i].circle) {
+            dots[i].circle.setMap(null);
+        }
+
+        if (dots[i].distance) {
+            dots[i].distance.setMap(null);
+        }
+    }
+
+    dots = [];
+}
+
+// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
+// 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
+// HTML Content를 만들어 리턴하는 함수입니다
+function getTimeHTML(distance) {
+
+    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+    var walkkTime = distance / 67 | 0;
+    var walkHour = '', walkMin = '';
+
+    // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+    if (walkkTime > 60) {
+        walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
+    }
+    walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
+
+    // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+    var bycicleTime = distance / 227 | 0;
+    var bycicleHour = '', bycicleMin = '';
+
+    // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+    if (bycicleTime > 60) {
+        bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
+    }
+    bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
+
+    // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
+    var content = '<ul class="dotOverlay distanceInfo">';
+    content += '    <li>';
+    content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">도보</span>' + walkHour + walkMin;
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+    content += '    </li>';
+    content += '</ul>'
+
+    return content;
+};};
+// [강서 끝]
+// [강남]
+
+
+
+
+function gangnum(){
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng( 37.514764811724696,127.08216447461876), // 지도의 중심좌표
+        level: 8 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+// kakao.maps.event.addListener(map, 'center_changed', function() {
+//
+//     // 지도의  레벨을 얻어옵니다
+//     var level = map.getLevel();
+//
+//     // 지도의 중심좌표를 얻어옵니다
+//     var latlng = map.getCenter();
+//
+//     var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
+//     message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
+//
+//     var resultDiv = document.getElementById('result');
+//     resultDiv.innerHTML = message;
+//
+// });
+
+var mapTypeControl = new kakao.maps.MapTypeControl();
+
+// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+var zoomControl = new kakao.maps.ZoomControl();
+map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(17.5, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+var imageSrc2 = "{% static 'assets/img/marker_red.png' %}"
+// 서초구
+var markerImage = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(37.46318, 127.043169); // 마커가 표시될 위치입니다
+var markerImage2 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition2 = new kakao.maps.LatLng(37.482927, 126.995738); // 마커가 표시될 위치입니다
+// 송파구
+var markerImage3 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition3 = new kakao.maps.LatLng(37.516338,127.102945); // 마커가 표시될 위치입니다
+var markerImage4 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition4 = new kakao.maps.LatLng(37.498028, 127.150201); // 마커가 표시될 위치입니다
+// 강남구
+var markerImage5 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition5 = new kakao.maps.LatLng(37.49933996,	127.0485619); // 마커가 표시될 위치입니다
+var markerImage6 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition6 = new kakao.maps.LatLng(37.49760165,	127.051622); // 마커가 표시될 위치입니다
+var markerImage7 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition7 = new kakao.maps.LatLng(37.5226118,	127.0576505); // 마커가 표시될 위치입니다
+
+// 서초구
+var marker = new kakao.maps.Marker({
+  position: markerPosition,
+  image: markerImage // 마커이미지 설정
+});
+var marker2 = new kakao.maps.Marker({
+  position: markerPosition2,
+  image: markerImage2 // 마커이미지 설정
+});
+// 송파구
+var marker3 = new kakao.maps.Marker({
+  position: markerPosition3,
+  image: markerImage3 // 마커이미지 설정
+});
+
+var marker4 = new kakao.maps.Marker({
+  position: markerPosition4,
+  image: markerImage4 // 마커이미지 설정
+});
+// 강남구
+var marker5 = new kakao.maps.Marker({
+  position: markerPosition5,
+  image: markerImage5 // 마커이미지 설정
+});
+var marker6 = new kakao.maps.Marker({
+  position: markerPosition6,
+  image: markerImage6 // 마커이미지 설정
+});
+var marker7 = new kakao.maps.Marker({
+  position: markerPosition7,
+  image: markerImage7 // 마커이미지 설정
+});
+
+
+// 마커가 지도 위에 표시되도록 설정합니다
+// 서초구
+marker.setMap(map);
+marker2.setMap(map);
+// 송파구
+marker3.setMap(map);
+marker4.setMap(map);
+
+// 강남구
+marker5.setMap(map);
+marker6.setMap(map);
+marker7.setMap(map);
+
+
+// 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+// 서초구
+var content =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=26390658" target="_blank">' +
+    '    <span class="title" >하나로클럽 양재점</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content2 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=27600592" target="_blank">' +
+    '    <span class="title">방배동 먹자골목</span>' +
+    '  </a>' +
+    '</div>';
+// 송파구
+var content3 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8690158" target="_blank">' +
+    '    <span class="title">홈플러스 잠실점</span>' +
+    '  </a>' +
+    '</div>';
+var content4 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18526258" target="_blank">' +
+    '    <span class="title" >마천중앙시장</span>' +
+    '  </a>' +
+    '</div>'
+	;
+// 강남구
+var content5 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8046653" target="_blank">' +
+    '    <span class="title">이마트 역삼점</span>' +
+    '  </a>' +
+    '</div>';
+var content6 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=12797547" target="_blank">' +
+    '    <span class="title">도곡시장</span>' +
+    '  </a>' +
+    '</div>';
+var content7 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524718" target="_blank">' +
+    '    <span class="title" >청담삼익시장</span>' +
+    '  </a>' +
+    '</div>'
+	;
+
+// 커스텀 오버레이가 표시될 위치입니다
+// 서초구
+var position = new kakao.maps.LatLng(37.46318, 127.043169);
+var position2 = new kakao.maps.LatLng(37.482927,126.995738);
+// 송파구
+var position3 = new kakao.maps.LatLng(37.516338,127.102945);
+var position4 = new kakao.maps.LatLng(37.498028,127.150201);
+
+// 강남구
+var position5 = new kakao.maps.LatLng(37.49933996,	127.0485619);
+var position6 = new kakao.maps.LatLng(37.49760165,	127.051622);
+var position7 = new kakao.maps.LatLng(37.5226118,	127.0576505);
+
+
+// 커스텀 오버레이를 생성합니다
+// 서초구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position,
+    content: content,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position2,
+    content: content2,
+    yAnchor: 1
+});
+// 송파구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position3,
+    content: content3,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position4,
+    content: content4,
+    yAnchor: 1,
+});
+// 강남구
+//
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position5,
+    content: content5,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position6,
+    content: content6,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position7,
+    content: content7,
+    yAnchor: 1,
+});
+
+var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
+var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
+var clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
+var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
+var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
+
+// 지도에 클릭 이벤트를 등록합니다
+// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+
+    // 마우스로 클릭한 위치입니다
+    var clickPosition = mouseEvent.latLng;
+
+    // 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
+    if (!drawingFlag) {
+
+        // 상태를 true로, 선이 그리고있는 상태로 변경합니다
+        drawingFlag = true;
+
+        // 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+        deleteClickLine();
+
+        // 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+        deleteDistnce();
+
+        // 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+        deleteCircleDot();
+
+        // 클릭한 위치를 기준으로 선을 생성하고 지도위에 표시합니다
+        clickLine = new kakao.maps.Polyline({
+            map: map, // 선을 표시할 지도입니다
+            path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 선이 그려지고 있을 때 마우스 움직임에 따라 선이 그려질 위치를 표시할 선을 생성합니다
+        moveLine = new kakao.maps.Polyline({
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 0.5, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 클릭한 지점에 대한 정보를 지도에 표시합니다
+        displayCircleDot(clickPosition, 0);
+
+
+    } else { // 선이 그려지고 있는 상태이면
+
+        // 그려지고 있는 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 좌표 배열에 클릭한 위치를 추가합니다
+        path.push(clickPosition);
+
+        // 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+        clickLine.setPath(path);
+
+        var distance = Math.round(clickLine.getLength());
+        displayCircleDot(clickPosition, distance);
+    }
+});
+
+// 지도에 마우스무브 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스무브 이벤트가 발생하면 그려질 선의 위치를 동적으로 보여주도록 합니다
+kakao.maps.event.addListener(map, 'mousemove', function (mouseEvent) {
+
+    // 지도 마우스무브 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag){
+
+        // 마우스 커서의 현재 위치를 얻어옵니다
+        var mousePosition = mouseEvent.latLng;
+
+        // 마우스 클릭으로 그려진 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 마우스 클릭으로 그려진 마지막 좌표와 마우스 커서 위치의 좌표로 선을 표시합니다
+        var movepath = [path[path.length-1], mousePosition];
+        moveLine.setPath(movepath);
+        moveLine.setMap(map);
+
+        var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
+            content = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+
+        // 거리정보를 지도에 표시합니다
+        showDistance(content, mousePosition);
+    }
+});
+
+// 지도에 마우스 오른쪽 클릭 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스 오른쪽 클릭 이벤트가 발생하면 선 그리기를 종료합니다
+kakao.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+
+    // 지도 오른쪽 클릭 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag) {
+
+        // 마우스무브로 그려진 선은 지도에서 제거합니다
+        moveLine.setMap(null);
+        moveLine = null;
+
+        // 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 선을 구성하는 좌표의 개수가 2개 이상이면
+        if (path.length > 1) {
+
+            // 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
+            if (dots[dots.length-1].distance) {
+                dots[dots.length-1].distance.setMap(null);
+                dots[dots.length-1].distance = null;
+            }
+
+            var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
+                content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
+
+            // 그려진 선의 거리정보를 지도에 표시합니다
+            showDistance(content, path[path.length-1]);
+
+        } else {
+
+            // 선을 구성하는 좌표의 개수가 1개 이하이면
+            // 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
+            deleteClickLine();
+            deleteCircleDot();
+            deleteDistnce();
+
+        }
+
+        // 상태를 false로, 그리지 않고 있는 상태로 변경합니다
+        drawingFlag = false;
+    }
+});
+
+// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
+function deleteClickLine() {
+    if (clickLine) {
+        clickLine.setMap(null);
+        clickLine = null;
+    }
+}
+
+// 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
+// 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+function showDistance(content, position) {
+
+    if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
+
+        // 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
+        distanceOverlay.setPosition(position);
+        distanceOverlay.setContent(content);
+
+    } else { // 커스텀 오버레이가 생성되지 않은 상태이면
+
+        // 커스텀 오버레이를 생성하고 지도에 표시합니다
+        distanceOverlay = new kakao.maps.CustomOverlay({
+            map: map, // 커스텀오버레이를 표시할 지도입니다
+            content: content,  // 커스텀오버레이에 표시할 내용입니다
+            position: position, // 커스텀오버레이를 표시할 위치입니다.
+            xAnchor: 0,
+            yAnchor: 0,
+            zIndex: 3
+        });
+    }
+}
+
+// 그려지고 있는 선의 총거리 정보와
+// 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
+function deleteDistnce () {
+    if (distanceOverlay) {
+        distanceOverlay.setMap(null);
+        distanceOverlay = null;
+    }
+}
+
+// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
+function displayCircleDot(position, distance) {
+
+    // 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
+    var circleOverlay = new kakao.maps.CustomOverlay({
+        content: '<span class="dot"></span>',
+        position: position,
+        zIndex: 1
+    });
+
+    // 지도에 표시합니다
+    circleOverlay.setMap(map);
+
+    if (distance > 0) {
+        // 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
+        var distanceOverlay = new kakao.maps.CustomOverlay({
+            content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
+            position: position,
+            yAnchor: 1,
+            zIndex: 2
+        });
+
+        // 지도에 표시합니다
+        distanceOverlay.setMap(map);
+    }
+
+    // 배열에 추가합니다
+    dots.push({circle:circleOverlay, distance: distanceOverlay});
+}
+
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
+function deleteCircleDot() {
+    var i;
+
+    for ( i = 0; i < dots.length; i++ ){
+        if (dots[i].circle) {
+            dots[i].circle.setMap(null);
+        }
+
+        if (dots[i].distance) {
+            dots[i].distance.setMap(null);
+        }
+    }
+
+    dots = [];
+}
+
+// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
+// 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
+// HTML Content를 만들어 리턴하는 함수입니다
+function getTimeHTML(distance) {
+
+    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+    var walkkTime = distance / 67 | 0;
+    var walkHour = '', walkMin = '';
+
+    // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+    if (walkkTime > 60) {
+        walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
+    }
+    walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
+
+    // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+    var bycicleTime = distance / 227 | 0;
+    var bycicleHour = '', bycicleMin = '';
+
+    // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+    if (bycicleTime > 60) {
+        bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
+    }
+    bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
+
+    // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
+    var content = '<ul class="dotOverlay distanceInfo">';
+    content += '    <li>';
+    content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">도보</span>' + walkHour + walkMin;
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+    content += '    </li>';
+    content += '</ul>'
+
+    return content;
+};};
+// [강남 끝]
+// [강동]
+function gangdong(){
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng( 37.58249845528221,127.10868570695708), // 지도의 중심좌표
+        level: 8 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+// kakao.maps.event.addListener(map, 'center_changed', function() {
+//
+//     // 지도의  레벨을 얻어옵니다
+//     var level = map.getLevel();
+//
+//     // 지도의 중심좌표를 얻어옵니다
+//     var latlng = map.getCenter();
+//
+//     var message = '<p>지도 레벨은 ' + level + ' 이고</p>';
+//     message += '<p>중심 좌표는 위도 ' + latlng.getLat() + ', 경도 ' + latlng.getLng() + '입니다</p>';
+//
+//     var resultDiv = document.getElementById('result');
+//     resultDiv.innerHTML = message;
+//
+// });
+
+var mapTypeControl = new kakao.maps.MapTypeControl();
+
+// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+var zoomControl = new kakao.maps.ZoomControl();
+map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(17.5, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+var imageSrc2 = "{% static 'assets/img/marker_red.png' %}"
+// 중랑구
+var markerImage = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(37.596622, 127.093671); // 마커가 표시될 위치입니다
+var markerImage2 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition2 = new kakao.maps.LatLng(37.58065, 127.081977); // 마커가 표시될 위치입니다
+var markerImage3 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition3 = new kakao.maps.LatLng(37.589143, 127.087734); // 마커가 표시될 위치입니다
+var markerImage4 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition4 = new kakao.maps.LatLng(37.596955, 127.098203); // 마커가 표시될 위치입니다
+// 강동구
+var markerImage5 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition5 = new kakao.maps.LatLng(37.55489824,	127.1557624); // 마커가 표시될 위치입니다
+var markerImage6 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition6 = new kakao.maps.LatLng(37.54592188,	127.1422439); // 마커가 표시될 위치입니다
+var markerImage7 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition7 = new kakao.maps.LatLng(37.52815867,	127.1350665); // 마커가 표시될 위치입니다
+var markerImage8 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition8 = new kakao.maps.LatLng(37.55103815,	127.1289052); // 마커가 표시될 위치입니다
+// 광진구
+var markerImage9 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition9 = new kakao.maps.LatLng(37.5358454,	127.0955962); // 마커가 표시될 위치입니다
+var markerImage10 = new kakao.maps.MarkerImage(imageSrc2, imageSize, imageOption),
+    markerPosition10 = new kakao.maps.LatLng(37.5387499,	127.0734114); // 마커가 표시될 위치입니다
+var markerImage11 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition11 = new kakao.maps.LatLng(37.53714235,	127.0647086); // 마커가 표시될 위치입니다
+var markerImage12 = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition12 = new kakao.maps.LatLng(37.53305122,	127.077262); // 마커가 표시될 위치입니다
+
+
+// 중랑구
+var marker = new kakao.maps.Marker({
+  position: markerPosition,
+  image: markerImage // 마커이미지 설정
+});
+var marker2 = new kakao.maps.Marker({
+  position: markerPosition2,
+  image: markerImage2 // 마커이미지 설정
+});
+var marker3 = new kakao.maps.Marker({
+  position: markerPosition3,
+  image: markerImage3 // 마커이미지 설정
+});
+
+var marker4 = new kakao.maps.Marker({
+  position: markerPosition4,
+  image: markerImage4 // 마커이미지 설정
+});
+//
+// 강동구
+var marker5 = new kakao.maps.Marker({
+  position: markerPosition5,
+  image: markerImage5 // 마커이미지 설정
+});
+var marker6 = new kakao.maps.Marker({
+  position: markerPosition6,
+  image: markerImage6 // 마커이미지 설정
+});
+var marker7 = new kakao.maps.Marker({
+  position: markerPosition7,
+  image: markerImage7 // 마커이미지 설정
+});
+var marker8 = new kakao.maps.Marker({
+  position: markerPosition8,
+  image: markerImage8 // 마커이미지 설정
+});
+// 광진구
+var marker9 = new kakao.maps.Marker({
+  position: markerPosition9,
+  image: markerImage9 // 마커이미지 설정
+});
+var marker10 = new kakao.maps.Marker({
+  position: markerPosition10,
+  image: markerImage10// 마커이미지 설정
+});
+var marker11 = new kakao.maps.Marker({
+  position: markerPosition11,
+  image: markerImage11 // 마커이미지 설정
+});
+var marker12 = new kakao.maps.Marker({
+  position: markerPosition12,
+  image: markerImage12// 마커이미지 설정
+});
+
+
+
+// 마커가 지도 위에 표시되도록 설정합니다
+// 중랑구
+marker.setMap(map);
+marker2.setMap(map);
+marker3.setMap(map);
+marker4.setMap(map);
+
+// 강동구
+marker5.setMap(map);
+marker6.setMap(map);
+marker7.setMap(map);
+marker8.setMap(map);
+
+// 광진구
+marker9.setMap(map);
+marker10.setMap(map);
+marker11.setMap(map);
+marker12.setMap(map);
+
+// 커스텀 오버레이에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+// 중랑구
+var content =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8039568" target="_blank">' +
+    '    <span class="title" >이마트 상봉점</span>' +
+    '  </a>' +
+    '</div>';
+var content2 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=10971473" target="_blank">' +
+    '    <span class="title">홈플러스 면목점</span>' +
+    '  </a>' +
+    '</div>';
+var content3 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=7848363"  target="_blank">' +
+    '    <span class="title">동원전통종합시장</span>' +
+    '  </a>' +
+    '</div>';
+var content4 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=17111041" target="_blank">' +
+    '    <span class="title" >우림시장</span>' +
+    '  </a>' +
+    '</div>';
+// 강동구
+var content5 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=10666796"  target="_blank">' +
+    '    <span class="title">이마트 명일점</span>' +
+    '  </a>' +
+    '</div>';
+var content6 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8165502" target="_blank">' +
+    '    <span class="title">홈플러스 강동점</span>' +
+    '  </a>' +
+    '</div>';
+var content7 =
+		'<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18524720" target="_blank">' +
+    '    <span class="title" >둔촌역전통시장</span>' +
+    '  </a>' +
+    '</div>'
+	;
+var content8 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=18526260" target="_blank">' +
+    '    <span class="title">암사종합시장</span>' +
+    '  </a>' +
+    '</div>';
+// 광진구
+var content9 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=7858395"  target="_blank">' +
+    '    <span class="title">롯데마트 강변점</span>' +
+    '  </a>' +
+    '</div>';
+var content10 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=19566620" target="_blank">' +
+    '    <span class="title">이마트 자양점</span>' +
+    '  </a>' +
+    '</div>';
+var content11 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=8247936"  target="_blank">' +
+    '    <span class="title">노룬산골목시장</span>' +
+    '  </a>' +
+    '</div>';
+var content12 = '<div class="customoverlay">' +
+    '  <a href="https://map.kakao.com/?itemId=12803330"  target="_blank">' +
+    '    <span class="title">자양골목시장</span>' +
+    '  </a>' +
+    '</div>';
+// // 중구
+
+
+// 커스텀 오버레이가 표시될 위치입니다
+// 중랑구
+var position = new kakao.maps.LatLng(37.596622, 127.093671);
+var position2 = new kakao.maps.LatLng(37.58065, 127.081977);
+var position3 = new kakao.maps.LatLng(37.589143,127.087734);
+var position4 = new kakao.maps.LatLng(37.596955,127.098203);
+
+// 강동구
+var position5 = new kakao.maps.LatLng(37.55489824,	127.1557624);
+var position6 = new kakao.maps.LatLng(37.54592188,	127.1422439);
+var position7 = new kakao.maps.LatLng(37.52815867,	127.1350665);
+var position8 = new kakao.maps.LatLng(37.55103815,	127.1289052);
+// 광진구
+var position9 = new kakao.maps.LatLng(37.5358454,	127.0955962);
+var position10 = new kakao.maps.LatLng(37.5387499,	127.0734114);
+var position11 = new kakao.maps.LatLng(37.53714235,	127.0647086);
+var position12 = new kakao.maps.LatLng(37.53305122,	127.077262);
+
+
+
+// 커스텀 오버레이를 생성합니다
+// 중랑구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position,
+    content: content,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position2,
+    content: content2,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position3,
+    content: content3,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position4,
+    content: content4,
+    yAnchor: 1,
+});
+// 강동구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position5,
+    content: content5,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position6,
+    content: content6,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position7,
+    content: content7,
+    yAnchor: 1,
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position8,
+    content: content8,
+    yAnchor: 1
+});
+// 광진구
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position9,
+    content: content9,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position10,
+    content: content10,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position11,
+    content: content11,
+    yAnchor: 1
+});
+var customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: position12,
+    content: content12,
+    yAnchor: 1
+});
+
+var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
+var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
+var clickLine // 마우스로 클릭한 좌표로 그려질 선 객체입니다
+var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
+var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
+
+// 지도에 클릭 이벤트를 등록합니다
+// 지도를 클릭하면 선 그리기가 시작됩니다 그려진 선이 있으면 지우고 다시 그립니다
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+
+    // 마우스로 클릭한 위치입니다
+    var clickPosition = mouseEvent.latLng;
+
+    // 지도 클릭이벤트가 발생했는데 선을 그리고있는 상태가 아니면
+    if (!drawingFlag) {
+
+        // 상태를 true로, 선이 그리고있는 상태로 변경합니다
+        drawingFlag = true;
+
+        // 지도 위에 선이 표시되고 있다면 지도에서 제거합니다
+        deleteClickLine();
+
+        // 지도 위에 커스텀오버레이가 표시되고 있다면 지도에서 제거합니다
+        deleteDistnce();
+
+        // 지도 위에 선을 그리기 위해 클릭한 지점과 해당 지점의 거리정보가 표시되고 있다면 지도에서 제거합니다
+        deleteCircleDot();
+
+        // 클릭한 위치를 기준으로 선을 생성하고 지도위에 표시합니다
+        clickLine = new kakao.maps.Polyline({
+            map: map, // 선을 표시할 지도입니다
+            path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 선이 그려지고 있을 때 마우스 움직임에 따라 선이 그려질 위치를 표시할 선을 생성합니다
+        moveLine = new kakao.maps.Polyline({
+            strokeWeight: 3, // 선의 두께입니다
+            strokeColor: '#db4040', // 선의 색깔입니다
+            strokeOpacity: 0.5, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'solid' // 선의 스타일입니다
+        });
+
+        // 클릭한 지점에 대한 정보를 지도에 표시합니다
+        displayCircleDot(clickPosition, 0);
+
+
+    } else { // 선이 그려지고 있는 상태이면
+
+        // 그려지고 있는 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 좌표 배열에 클릭한 위치를 추가합니다
+        path.push(clickPosition);
+
+        // 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
+        clickLine.setPath(path);
+
+        var distance = Math.round(clickLine.getLength());
+        displayCircleDot(clickPosition, distance);
+    }
+});
+
+// 지도에 마우스무브 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스무브 이벤트가 발생하면 그려질 선의 위치를 동적으로 보여주도록 합니다
+kakao.maps.event.addListener(map, 'mousemove', function (mouseEvent) {
+
+    // 지도 마우스무브 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag){
+
+        // 마우스 커서의 현재 위치를 얻어옵니다
+        var mousePosition = mouseEvent.latLng;
+
+        // 마우스 클릭으로 그려진 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 마우스 클릭으로 그려진 마지막 좌표와 마우스 커서 위치의 좌표로 선을 표시합니다
+        var movepath = [path[path.length-1], mousePosition];
+        moveLine.setPath(movepath);
+        moveLine.setMap(map);
+
+        var distance = Math.round(clickLine.getLength() + moveLine.getLength()), // 선의 총 거리를 계산합니다
+            content = '<div class="dotOverlay distanceInfo">총거리 <span class="number">' + distance + '</span>m</div>'; // 커스텀오버레이에 추가될 내용입니다
+
+        // 거리정보를 지도에 표시합니다
+        showDistance(content, mousePosition);
+    }
+});
+
+// 지도에 마우스 오른쪽 클릭 이벤트를 등록합니다
+// 선을 그리고있는 상태에서 마우스 오른쪽 클릭 이벤트가 발생하면 선 그리기를 종료합니다
+kakao.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+
+    // 지도 오른쪽 클릭 이벤트가 발생했는데 선을 그리고있는 상태이면
+    if (drawingFlag) {
+
+        // 마우스무브로 그려진 선은 지도에서 제거합니다
+        moveLine.setMap(null);
+        moveLine = null;
+
+        // 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
+        var path = clickLine.getPath();
+
+        // 선을 구성하는 좌표의 개수가 2개 이상이면
+        if (path.length > 1) {
+
+            // 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
+            if (dots[dots.length-1].distance) {
+                dots[dots.length-1].distance.setMap(null);
+                dots[dots.length-1].distance = null;
+            }
+
+            var distance = Math.round(clickLine.getLength()), // 선의 총 거리를 계산합니다
+                content = getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
+
+            // 그려진 선의 거리정보를 지도에 표시합니다
+            showDistance(content, path[path.length-1]);
+
+        } else {
+
+            // 선을 구성하는 좌표의 개수가 1개 이하이면
+            // 지도에 표시되고 있는 선과 정보들을 지도에서 제거합니다.
+            deleteClickLine();
+            deleteCircleDot();
+            deleteDistnce();
+
+        }
+
+        // 상태를 false로, 그리지 않고 있는 상태로 변경합니다
+        drawingFlag = false;
+    }
+});
+
+// 클릭으로 그려진 선을 지도에서 제거하는 함수입니다
+function deleteClickLine() {
+    if (clickLine) {
+        clickLine.setMap(null);
+        clickLine = null;
+    }
+}
+
+// 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
+// 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+function showDistance(content, position) {
+
+    if (distanceOverlay) { // 커스텀오버레이가 생성된 상태이면
+
+        // 커스텀 오버레이의 위치와 표시할 내용을 설정합니다
+        distanceOverlay.setPosition(position);
+        distanceOverlay.setContent(content);
+
+    } else { // 커스텀 오버레이가 생성되지 않은 상태이면
+
+        // 커스텀 오버레이를 생성하고 지도에 표시합니다
+        distanceOverlay = new kakao.maps.CustomOverlay({
+            map: map, // 커스텀오버레이를 표시할 지도입니다
+            content: content,  // 커스텀오버레이에 표시할 내용입니다
+            position: position, // 커스텀오버레이를 표시할 위치입니다.
+            xAnchor: 0,
+            yAnchor: 0,
+            zIndex: 3
+        });
+    }
+}
+
+// 그려지고 있는 선의 총거리 정보와
+// 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 삭제하는 함수입니다
+function deleteDistnce () {
+    if (distanceOverlay) {
+        distanceOverlay.setMap(null);
+        distanceOverlay = null;
+    }
+}
+
+// 선이 그려지고 있는 상태일 때 지도를 클릭하면 호출하여
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 표출하는 함수입니다
+function displayCircleDot(position, distance) {
+
+    // 클릭 지점을 표시할 빨간 동그라미 커스텀오버레이를 생성합니다
+    var circleOverlay = new kakao.maps.CustomOverlay({
+        content: '<span class="dot"></span>',
+        position: position,
+        zIndex: 1
+    });
+
+    // 지도에 표시합니다
+    circleOverlay.setMap(map);
+
+    if (distance > 0) {
+        // 클릭한 지점까지의 그려진 선의 총 거리를 표시할 커스텀 오버레이를 생성합니다
+        var distanceOverlay = new kakao.maps.CustomOverlay({
+            content: '<div class="dotOverlay">거리 <span class="number">' + distance + '</span>m</div>',
+            position: position,
+            yAnchor: 1,
+            zIndex: 2
+        });
+
+        // 지도에 표시합니다
+        distanceOverlay.setMap(map);
+    }
+
+    // 배열에 추가합니다
+    dots.push({circle:circleOverlay, distance: distanceOverlay});
+}
+
+// 클릭 지점에 대한 정보 (동그라미와 클릭 지점까지의 총거리)를 지도에서 모두 제거하는 함수입니다
+function deleteCircleDot() {
+    var i;
+
+    for ( i = 0; i < dots.length; i++ ){
+        if (dots[i].circle) {
+            dots[i].circle.setMap(null);
+        }
+
+        if (dots[i].distance) {
+            dots[i].distance.setMap(null);
+        }
+    }
+
+    dots = [];
+}
+
+// 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
+// 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
+// HTML Content를 만들어 리턴하는 함수입니다
+function getTimeHTML(distance) {
+
+    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+    var walkkTime = distance / 67 | 0;
+    var walkHour = '', walkMin = '';
+
+    // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+    if (walkkTime > 60) {
+        walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
+    }
+    walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
+
+    // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+    var bycicleTime = distance / 227 | 0;
+    var bycicleHour = '', bycicleMin = '';
+
+    // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+    if (bycicleTime > 60) {
+        bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
+    }
+    bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
+
+    // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
+    var content = '<ul class="dotOverlay distanceInfo">';
+    content += '    <li>';
+    content += '        <span class="label">총거리</span><span class="number">' + distance + '</span>m';
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">도보</span>' + walkHour + walkMin;
+    content += '    </li>';
+    content += '    <li>';
+    content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+    content += '    </li>';
+    content += '</ul>'
+
+    return content;
+};};
+</script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
+
+
+
+{% endblock %}
+{% include 'finalApp/footer.html' %}

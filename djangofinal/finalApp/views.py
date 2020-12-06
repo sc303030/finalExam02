@@ -11,11 +11,11 @@ def index(request):
     return render(request, 'finalApp/index_2.html')
 
 def about(request):
-    return render(request, 'finalApp/about.html')
+    return render(request, 'finalApp/about_2.html')
 
 
 def shop(request):
-    return render(request, 'finalApp/shop.html')
+    return render(request, 'finalApp/shop_2.html')
 
 
 def selectshop(request):
@@ -48,6 +48,14 @@ def checkout(request):
 
 def bigdatatell(request):
     return render(request, 'finalApp/bigdatatell.html')
+
+def mapkakao(request):
+    return render(request, 'finalApp/map_kakao.html')
+
+def additionalfactors(request):
+    return render(request, 'finalApp/additionalfactors.html')
+
+
 
 def noonegu(request, id):
     price_mart = []
@@ -217,7 +225,7 @@ def noonegu(request, id):
     year2020_place = []
     year2020_category = []
 
-    with open('./static/seoul_1year_mean.csv', mode='r', encoding='utf-8') as seoul_lists:
+    with open('./static/seoul_1year_mean.csv', mode='r', encoding='utf-8-sig') as seoul_lists:
         reader = csv.reader(seoul_lists)
 
         for list_num in reader:
@@ -244,11 +252,11 @@ def noonegu(request, id):
         'dada': dada,
         'category': category[0],
 
-        'expensive_li' : expensive_li,
-        'cheap_li' : cheap_li,
+        'expensive_li': expensive_li,
+        'cheap_li': cheap_li,
 
-        'label_mart' : label_mart,
-        'label_si' : label_si,
+        'label_mart': label_mart,
+        'label_si': label_si,
 
         'cheaper_price_si': cheaper_price_si,
         'cheaper_price_mart': cheaper_price_mart,
@@ -448,9 +456,9 @@ def mapseoulpriceajax(request, id):
 
     pricelist = [[location[i], place[i], year4mean[i], martsi[i]] for i in range(len(martsi))]
 
-    pricelistdesc = sorted(pricelist, key=lambda x:-x[2])
+    pricelistdesc = sorted(pricelist, key=lambda x:x[2])
 
-    pricelistasc = sorted(pricelist, key=lambda x:x[2])
+    pricelistasc = sorted(pricelist, key=lambda x:-x[2])
 
     price_ex_location = [pricelistdesc[i][0] for i in range(3)]
     price_ex_place = [pricelistdesc[i][1] for i in range(3)]
@@ -513,6 +521,36 @@ def vegetableSelectProducer(request, id):
         'price_total': price_total,
         'days': days,
         'category': category[0]
+    }
+    data = [context]
+    return JsonResponse(data, safe=False)
+def get_map_kakao(request, id):
+    print(id)
+    ms = []
+    location = []
+    add = []
+    tel = []
+    place = []
+
+
+    with open('./static/map_kakao.csv', mode='r', encoding='utf-8') as seoul_lists:
+        reader = csv.reader(seoul_lists)
+
+        for list_num in reader:
+            if list_num[3] == id:
+                place.append(list_num[0])
+                ms.append(list_num[1])
+                location.append(list_num[2])
+                add.append(list_num[4])
+                tel.append(list_num[5])
+
+    context = {
+        'place' : place,
+        'ms': ms,
+        'location': location,
+        'add': add,
+        'tel': tel,
+        'length' : len(ms)
     }
     data = [context]
     return JsonResponse(data, safe=False)

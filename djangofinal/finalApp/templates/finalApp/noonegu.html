@@ -32,6 +32,7 @@
 		/*padding-bottom: 50px;*/
 	}
 </style>
+
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
@@ -78,7 +79,7 @@
 						<div class="product-image">
 							<a href="single-product.html"><img src="{% static 'assets/img/products/Radish.jpg' %}" alt=""></a>
 						</div>
-						<p class="product-price"><span>20Kg</span>무</p>
+						<p class="product-price"><span>1개</span>무</p>
 						<a href="#nooneacabbagediv" data-toggle="collapse"   class="cart-btn" id="vegetableclick3"><i class="fas fa-shopping-cart"></i>Click</a>
 					</div>
 				</div>
@@ -118,7 +119,7 @@
 				<div class="col-md-7">
 					<div class="cart-table-wrap">
 						<h4>시장 & 마트 가격 <span class="orange-text">(2020년 평균 가격 ~ 10월)</span></h4>
-						<table class="price-table col-md-9 ">
+						<table class="price-table col-md-9 " style="width: 600px;">
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
 <!--									<th class="product-remove"></th>-->
@@ -147,7 +148,8 @@
 	<!-- end single product -->
 
 	<!-- more products -->
-	<div class="more-products mb-50" id="region2">
+	<hr>
+	<div class="more-products mb-50 mt-80" id="region2">
 		<div class="container" id="moreRegion2">
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
@@ -167,6 +169,7 @@
 						</p>
 					</div>
 	</figure>
+	<hr>
 	<div class="more-products mb-50 mt-80" id="region4">
 		<div class="container" id="moreRegion4">
 			<div class="row">
@@ -183,6 +186,7 @@
 			</div>
 		</div>
 	</div>
+	<hr>
 	<div class="more-products mb-150 mt-80" id="region3" >
 		<div class="container" id="moreRegion3">
 			<div class="row">
@@ -209,7 +213,7 @@
 												{% elif board == 2 %}
 													<p><img src="{% static 'assets/img/products/cabbage.jpg' %}"></p>
 												{% elif board == 3 %}
-												<p><img src="{% static 'assets/img/products/bigpa.jpg' %}"></p>
+												<p><img src="{% static 'assets/img/products/lettuce.jpg' %}"></p>
 												{% elif board == 4 %}
 													<p><img src="{% static 'assets/img/products/onion.jpg' %}"></p>
 												{% else %}
@@ -235,7 +239,7 @@
 												{% elif board == 2 %}
 													<p><img src="{% static 'assets/img/products/cabbage.jpg' %}"></p>
 												{% elif board == 3 %}
-												<p><img src="{% static 'assets/img/products/bigpa.jpg' %}"></p>
+												<p><img src="{% static 'assets/img/products/lettuce.jpg' %}"></p>
 												{% elif board == 4 %}
 													<p><img src="{% static 'assets/img/products/onion.jpg' %}"></p>
 												{% else %}
@@ -251,8 +255,9 @@
 					</div>
 				</div>
 			</div>
+		<hr>
 			<div>
-				<div class="col-lg-8 offset-lg-2 text-center" >
+				<div class="col-lg-8 offset-lg-2 text-center mt-80" >
 						<div class="content" >
 							<h3>서울에 비해 <span class="orange-text">{% csrf_token %}{{name}}</span>의 가격 수준은?</h3><br/>
 							<div class="section-title" id="vegdiv3">
@@ -263,7 +268,7 @@
 							</div>
 						</div>
 					<div class="container" >
-						<a href="{% url 'distribution' %}" ><button type="button" class="btn btn-dark">혹시 당신의 채소, 비싸게 느껴지시나요?</button></a>
+						<a href="{% url 'distribution' %}" ><button type="button" class="btn btn-dark" style="width: 700px; height: 50px; font-size: 20px; margin-top: 20px;">혹시 당신의 채소, 비싸게 느껴지시나요?</button></a>
 					</div>
 
 				</div>
@@ -306,7 +311,6 @@
 											'<li>'+'<h5>'+  data[0].name + ' 다음으로 배추를 비싸게 파는 지역은 '+'<span class="orange-text">'+ data[0].expen_next +  '</span>'+ '입니다.' + '</h5></li><br/>');
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
 					}
 					$('#tablelist').empty()
 					var txt = "";
@@ -429,7 +433,6 @@
 					$("#tablelist").append(txt);
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
 					}
 					if(data[0].sizero == 'False') {
 						Highcharts.chart('chartdiv', {
@@ -529,7 +532,6 @@
 											'<li>'+'<h5>'+  data[0].name + ' 다음으로 배추를 비싸게 파는 지역은 '+'<span class="orange-text">'+ data[0].expen_next +  '</span>'+ '입니다.' + '</h5></li><br/>');
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
 					}
 					$('#tablelist').empty()
 					var txt = "";
@@ -638,7 +640,6 @@
 											'<li>'+'<h5>'+  data[0].name + ' 다음으로 배추를 비싸게 파는 지역은 '+'<span class="orange-text">'+ data[0].expen_next +  '</span>'+ '입니다.' + '</h5></li><br/>');
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
 					}
 					$('#tablelist').empty()
 					var txt = "";
@@ -747,7 +748,6 @@
 											'<li>'+'<h5>'+  data[0].name + ' 다음으로 배추를 비싸게 파는 지역은 '+'<span class="orange-text">'+ data[0].expen_next +  '</span>'+ '입니다.' + '</h5></li><br/>');
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
 					}
 					$('#tablelist').empty()
 					var txt = "";

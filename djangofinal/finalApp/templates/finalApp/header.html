@@ -57,7 +57,7 @@
 						<!-- logo -->
 						<div class="site-logo">
 							<a href="{% url 'index' %}">
-								<img src="{% static 'assets/img/logo.png' %}" alt="">
+								<img src="{% static 'assets/img/logo2.png' %}" alt="">
 							</a>
 						</div>
 						<!-- logo -->
@@ -67,13 +67,20 @@
 							<ul>
 								<li class="current-list-item"><a href="{% url 'index' %}">홈</a>
 								<li><a href="{% url 'about' %}">홈페이지 소개</a></li>
-								<li><a href="{% url 'selectshop' %}">소비자</a></li>
-								<li><a href="{% url 'shop' %}">생산자</a></li>
+								<li><a href="#">현재 채소 가격</a>
+									<ul class="sub-menu">
+										<li><a href="{% url 'selectshop' %}">우리 동네 채소 가격 알아보기</a></li>
+										<li><a href="{% url 'mapseoulprice' %}">서울 채소별 싼 곳 비싼 곳 알아보기</a></li>
+										<li><a href="{% url 'bigdatatell' %}">4년간 채소 가격 주요 변동 시기 알아기</a></li>
+									</ul>
+								</li>
+								<li><a href="{% url 'shop' %}">미래의 채소가격</a></li>
+								<li><a href="{% url 'additionalfactors' %}">재미로 알아보는 채소가격</a></li>
 								<li><a href="#">더 알아보기</a>
 									<ul class="sub-menu">
-										<li><a href="{% url 'bigdatatell' %}">채소 가격 변동</a></li>
 										<li><a href="{% url 'distribution' %}">유통</a></li>
 										<li><a href="{% url 'news' %}">농산물 관련 기사</a></li>
+										<li><a href="{% url 'mapkakao' %}">마트/시장 지도</a></li>
 									</ul>
 								</li>
 								<li>
