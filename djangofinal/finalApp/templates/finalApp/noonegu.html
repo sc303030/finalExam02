@@ -117,7 +117,7 @@
 					</div>
 				</div>
 				<div class="col-md-7">
-					<div class="cart-table-wrap">
+					<div class="cart-table-wrap" style="width:100%;height:295px;overflow-y:auto;overflow-x:hidden">
 						<h4>시장 & 마트 가격 <span class="orange-text">(2020년 평균 가격 ~ 10월)</span></h4>
 						<table class="price-table col-md-9 " style="width: 600px;">
 							<thead class="cart-table-head">
@@ -268,7 +268,7 @@
 							</div>
 						</div>
 					<div class="container" >
-						<a href="{% url 'distribution' %}" ><button type="button" class="btn btn-dark" style="width: 700px; height: 50px; font-size: 20px; margin-top: 20px;">혹시 당신의 채소, 비싸게 느껴지시나요?</button></a>
+						<a href="{% url 'distribution' %}"  class="cart-btn" style="width: 600px; height: 50px; font-size: 20px; margin-top: 20px; padding-bottom: 45px;">혹시 당신의 채소, 비싸게 느껴지시나요?&nbsp&nbsp&nbsp▶▶▶▶▶</a>
 					</div>
 
 				</div>
@@ -319,7 +319,7 @@
 					for(var i = 0 ; i<data[0].length; i++){
 						txt +='<tr class="table-body-row">';
 						txt +='<td class="price-week-pred">' + place[i] + '</td>'
-						txt += '<td class="price-twodaysago">' + mean[i] + '</td>'
+						txt += '<td class="price-twodaysago">' + mean[i] + ' 원' + '</td>'
 						txt += '</tr>'
 					}
 					$("#tablelist").append(txt);
@@ -427,7 +427,7 @@
 					for(var i = 0 ; i<data[0].length; i++){
 						txt +='<tr class="table-body-row">';
 						txt +='<td class="price-week-pred">' + place[i] + '</td>'
-						txt += '<td class="price-twodaysago">' + mean[i] + '</td>'
+						txt += '<td class="price-twodaysago">' + mean[i] + ' 원'+ '</td>'
 						txt += '</tr>'
 					}
 					$("#tablelist").append(txt);
@@ -540,7 +540,7 @@
 					for(var i = 0 ; i<data[0].length; i++){
 						txt +='<tr class="table-body-row">';
 						txt +='<td class="price-week-pred">' + place[i] + '</td>'
-						txt += '<td class="price-twodaysago">' + mean[i] + '</td>'
+						txt += '<td class="price-twodaysago">' + mean[i] + ' 원'+ '</td>'
 						txt += '</tr>'
 					}
 					$("#tablelist").append(txt);
@@ -648,7 +648,7 @@
 					for(var i = 0 ; i<data[0].length; i++){
 						txt +='<tr class="table-body-row">';
 						txt +='<td class="price-week-pred">' + place[i] + '</td>'
-						txt += '<td class="price-twodaysago">' + mean[i] + '</td>'
+						txt += '<td class="price-twodaysago">' + mean[i] + ' 원'+ '</td>'
 						txt += '</tr>'
 					}
 					$("#tablelist").append(txt);
@@ -756,7 +756,7 @@
 					for(var i = 0 ; i<data[0].length; i++){
 						txt +='<tr class="table-body-row">';
 						txt +='<td class="price-week-pred">' + place[i] + '</td>'
-						txt += '<td class="price-twodaysago">' + mean[i] + '</td>'
+						txt += '<td class="price-twodaysago">' + mean[i] + ' 원'+ '</td>'
 						txt += '</tr>'
 					}
 					$("#tablelist").append(txt);

@@ -230,7 +230,9 @@ def noonegu(request, id):
 
         for list_num in reader:
             if list_num[1] == str(id):
-                year2020_mean.append(int(round(float(list_num[0]),0)))
+                a = int(round(float(list_num[0]),0))
+                number = format(a, ',')
+                year2020_mean.append(number)
                 year2020_local.append(list_num[1])
                 year2020_place.append(list_num[2])
                 year2020_category.append(list_num[3])
@@ -353,7 +355,7 @@ def vegetableSelect(request, id):
 
         for list_num in reader:
             if list_num[3] == str(id):
-                year2020_mean.append(int(list_num[0]))
+                year2020_mean.append(list_num[0])
                 year2020_place.append(list_num[2])
 
     dada2 = []
@@ -462,12 +464,12 @@ def mapseoulpriceajax(request, id):
 
     price_ex_location = [pricelistdesc[i][0] for i in range(3)]
     price_ex_place = [pricelistdesc[i][1] for i in range(3)]
-    price_ex_price = [pricelistdesc[i][2] for i in range(3)]
+    price_ex_price = [format(pricelistdesc[i][2],',') for i in range(3)]
     price_ex_martsi = [pricelistdesc[i][3] for i in range(3)]
 
     price_ch_location = [pricelistasc[i][0] for i in range(3)]
     price_ch_place = [pricelistasc[i][1] for i in range(3)]
-    price_ch_price = [pricelistasc[i][2] for i in range(3)]
+    price_ch_price = [format(pricelistasc[i][2],',') for i in range(3)]
     price_ch_martsi = [pricelistasc[i][3] for i in range(3)]
     rank_num = [i for i in range(1,4)]
 
