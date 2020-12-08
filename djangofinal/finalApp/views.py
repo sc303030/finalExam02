@@ -556,3 +556,44 @@ def get_map_kakao(request, id):
     }
     data = [context]
     return JsonResponse(data, safe=False)
+
+def additionalfactors2(request):
+    print('-------- ajax json additionalfactors2')
+
+    days = []
+    cabbage_price = []
+
+    stock_seedkind = []
+    stock_fertilizer = []
+    stock_pesticide = []
+    stock_machine = []
+    stock_smartfarm = []
+
+    with open('./static/stock_cabbagePrice.csv', mode='r', encoding='utf-8-sig') as stock_cabbagePrice:
+        reader = csv.reader(stock_cabbagePrice)
+
+        for list_num in reader:
+            days.append(list_num[0])
+
+            stock_seedkind.append(int(list_num[1]))
+            stock_fertilizer.append(int(list_num[2]))
+            stock_pesticide.append(int(list_num[3]))
+            stock_machine.append(int(list_num[4]))
+            stock_smartfarm.append(int(list_num[5]))
+
+            cabbage_price.append(int(list_num[6]))
+
+    context = {
+
+        'days': days,
+        'cabbage_price': cabbage_price,
+        'stock_seedkind': stock_seedkind,
+        'stock_fertilizer': stock_fertilizer,
+        'stock_pesticide': stock_pesticide,
+        'stock_machine': stock_machine,
+        'stock_smartfarm': stock_smartfarm
+
+    }
+    data = [context]
+
+    return JsonResponse(data, safe=False)

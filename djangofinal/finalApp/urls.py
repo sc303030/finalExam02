@@ -25,4 +25,5 @@ urlpatterns = [
     path('mapkakao/', views.mapkakao, name='mapkakao'),
     path('get_map_kakao/<str:id>', views.get_map_kakao, name='get_map_kakao'),
     path('additionalfactors/', views.additionalfactors, name='additionalfactors'),
+    path('additionalfactors2/', views.additionalfactors2, name='additionalfactors2'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
