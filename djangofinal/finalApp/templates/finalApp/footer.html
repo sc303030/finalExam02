@@ -63,7 +63,7 @@
 					<div class="footer-box subscribe">
 						<h2 class="widget-title">구독</h2>
 						<p>싼걸비걸의 최신 소식을 받고 싶으면 <br/>구독하세요.</p>
-						<form action="index.html">
+						<form id="sub">
 							<input type="email" placeholder="Email">
 							<button type="submit"><i class="fas fa-paper-plane"></i></button>
 						</form>
@@ -116,5 +116,11 @@
 	<script src="{% static 'assets/js/sticker.js' %}"></script>
 	<!-- main js -->
 	<script src="{% static 'assets/js/main.js' %}"></script>
+	<script>sub
+	$(document).ready(function() {
+		$('#sub').click(function () {
+			alert('구독 완료')
+		})})
+	</script>
 </body>
 </html>
