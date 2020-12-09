@@ -53,7 +53,7 @@ def mapkakao(request):
     return render(request, 'finalApp/map_kakao.html')
 
 def additionalfactors(request):
-    return render(request, 'finalApp/additionalfactors.html')
+    return render(request, 'finalApp/additionalfactors_2.html')
 
 
 
@@ -418,44 +418,49 @@ def vegetableSelect(request, id):
     lettuce_ratio = []
     lettuce_infor = []
 
-    length = []
+    onion_length = []
+    cabbage_length = []
+    radish_length = []
+    cucumber_length = []
+    lettuce_length = []
+
+
     with open('./static/vegi_change.csv', mode='r', encoding='utf-8-sig') as bigdatatell2_list:
         reader = csv.reader(bigdatatell2_list)
 
         for list_num in reader:
-            if list_num[0] == id:
-                length.append(list_num[0])
+            if  list_num[0] == '양파':
+                onion_length.append(list_num[0])
                 onion_year.append(list_num[1])
                 onion_plmi.append(list_num[2])
                 onion_ratio.append(list_num[3])
                 onion_infor.append(list_num[4])
-            elif list_num[0] == id:
-                length.append(list_num[0])
+            elif list_num[0] == '배추':
+                cabbage_length.append(list_num[0])
                 cabbage_year.append(list_num[1])
                 cabbage_plmi.append(list_num[2])
                 cabbage_ratio.append(list_num[3])
                 cabbage_infor.append(list_num[4])
-            elif list_num[0] == id:
-                length.append(list_num[0])
+            elif list_num[0] == '무':
+                radish_length.append(list_num[0])
                 radish_year.append(list_num[1])
                 radish_plmi.append(list_num[2])
                 radish_ratio.append(list_num[3])
                 radish_infor.append(list_num[4])
-            elif list_num[0] == id:
-                length.append(list_num[0])
+            elif list_num[0] == '오이':
+                cucumber_length.append(list_num[0])
                 cucumber_year.append(list_num[1])
                 cucumber_plmi.append(list_num[2])
                 cucumber_ratio.append(list_num[3])
                 cucumber_infor.append(list_num[4])
-            elif list_num[0] == id:
-                length.append(list_num[0])
+            else:
+                lettuce_length.append(list_num[0])
                 lettuce_year.append(list_num[1])
                 lettuce_plmi.append(list_num[2])
                 lettuce_ratio.append(list_num[3])
                 lettuce_infor.append(list_num[4])
 
-
-    print(onion_year)
+    print(onion_length)
     context = {
         'price_si': price_si,
         'price_mart': price_mart,
@@ -507,7 +512,11 @@ def vegetableSelect(request, id):
         'lettuce_ratio': lettuce_ratio,
         'lettuce_infor': lettuce_infor,
 
-        'biglength' : len(length)
+        'onion_length' : len(onion_length),
+        'cabbage_length': len(cabbage_length),
+        'radish_length': len(radish_length),
+        'cucumber_length': len(cucumber_length),
+        'lettuce_length': len(lettuce_length)
     }
     if price_si[0] == 0:
         context['sizero'] = 'False'

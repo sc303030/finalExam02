@@ -171,8 +171,8 @@
 					var onion_plmi = data[0].onion_plmi;
 					var onion_ratio = data[0].onion_ratio;
 					var onion_infor = data[0].onion_infor;
-					var biglength = data[0].biglength;
-					for(var i = 0 ; i< biglength; i++){
+					var onion_length = data[0].onion_length;
+					for(var i = 0 ; i< onion_length; i++){
 						if(onion_plmi[i] == '하락세'){
 							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i] + '   :   ' + onion_infor[i] + '</h6></p>'
 					}else if(onion_plmi[i] == '상승세'){
@@ -193,6 +193,14 @@
 								}
 							})
 						}
+						else if(dataonion[i] ==8.99){
+							data.push({
+								y: 8.99,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/onion_minimi.png' %})'
+								}
+							})
+						}
 						else if(dataonion[i] == -12.38){
 							data.push({
 								y: -12.38,
@@ -204,6 +212,14 @@
 						else if(dataonion[i] == 15.81){
 							data.push({
 								y: 15.81,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/onion_minimi.png' %})'
+								}
+							})
+						}
+						else if(dataonion[i] == -7.92){
+							data.push({
+								y: -7.92,
 								marker: {
 									symbol: 'url({% static 'assets/img/products/onion_minimi.png' %})'
 								}
@@ -279,19 +295,19 @@
 					var length = data[0].daylength
 					$('#information').empty()
 					var txt = "";
-					var onion_year = data[0].onion_year;
-					var onion_plmi = data[0].onion_plmi;
-					var onion_ratio = data[0].onion_ratio;
-					var onion_infor = data[0].onion_infor;
-					var biglength = data[0].biglength;
-					for(var i = 0 ; i< biglength; i++){
-						if(onion_plmi[i] == '하락세'){
-							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i] + '   :   ' + onion_infor[i] + '</h6></p>'
-					}else if(onion_plmi[i] == '상승세'){
-							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i]  + '   :   ' + onion_infor[i] + '</h6></p>'
+					var cabbage_year = data[0].cabbage_year;
+					var cabbage_plmi = data[0].cabbage_plmi;
+					var cabbage_ratio = data[0].cabbage_ratio;
+					var cabbage_infor = data[0].cabbage_infor;
+					var cabbage_length = data[0].cabbage_length;
+					for(var i = 0 ; i< cabbage_length; i++){
+						if(cabbage_plmi[i] == '하락세'){
+							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + cabbage_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ cabbage_ratio[i] + '</h5>' + '<h6>' + cabbage_year[i] + '   :   ' + cabbage_infor[i] + '</h6></p>'
+					}else if(cabbage_plmi[i] == '상승세'){
+							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + cabbage_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + cabbage_ratio[i] + '</h5>' + '<h6>' + cabbage_year[i]  + '   :   ' + cabbage_infor[i] + '</h6></p>'
 						}
 					else{
-						txt +='<p><h5><a class="cart-btn"  style="background-color: #82FA58; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + onion_year[i] + '</a>' + '<br/>' + onion_infor[i] + '</h5></p>'
+						txt +='<p><h5><a class="cart-btn"  style="background-color: #82FA58; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + cabbage_year[i] + '</a>' + '<br/>' + cabbage_infor[i] + '</h5></p>'
 						}};
 					$("#information").append(txt)
 					var getDay2 = function() {
@@ -313,9 +329,9 @@
 								}
 							})
 						}
-						else if(datacabbage[i] == 47.7){
+						else if(datacabbage[i] == 51.99){
 							data.push({
-								y: 47.7,
+								y: 51.99,
 								marker: {
 									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
 								}
@@ -324,6 +340,14 @@
 						else if(datacabbage[i] == -41.11){
 							data.push({
 								y: -41.11,
+								marker: {
+									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
+								}
+							})
+						}
+						else if(datacabbage[i] == 73.13){
+							data.push({
+								y: 73.13,
 								marker: {
 									symbol: 'url({% static 'assets/img/products/cabbage_mini.png' %})'
 								}
@@ -398,6 +422,23 @@
 					}
 					var dataraddish = data[0].raddish_change
 					var length = data[0].daylength
+					$('#information').empty()
+					var txt = "";
+					var radish_year = data[0].radish_year;
+					var radish_plmi = data[0].radish_plmi;
+					var radish_ratio = data[0].radish_ratio;
+					var radish_infor = data[0].radish_infor;
+					var radish_length = data[0].radish_length;
+					for(var i = 0 ; i< radish_length; i++){
+						if(radish_plmi[i] == '하락세'){
+							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + radish_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ radish_ratio[i] + '</h5>' + '<h6>' + radish_year[i] + '   :   ' + radish_infor[i] + '</h6></p>'
+					}else if(radish_plmi[i] == '상승세'){
+							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + radish_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + radish_ratio[i] + '</h5>' + '<h6>' + radish_year[i]  + '   :   ' + radish_infor[i] + '</h6></p>'
+						}
+					else{
+						txt +='<p><h5><a class="cart-btn"  style="background-color: #00FF00; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + radish_year[i] + '</a>' + '<br/>' + radish_infor[i] + '</h5></p>'
+						}};
+					$("#information").append(txt)
 					var getDay3 = function() {
 					  var data = [];
 					  for (var i = 0; i< length; i++) {
@@ -417,9 +458,9 @@
 								}
 							})
 						}
-						else if(dataraddish[i] == -23.37){
+						else if(dataraddish[i] == -34.82){
 							data.push({
-								y: -23.37,
+								y: -34.82,
 								marker: {
 									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
 								}
@@ -433,9 +474,9 @@
 								}
 							})
 						}
-						else if(dataraddish[i] == -34.82){
+						else if(dataraddish[i] == 37.36){
 							data.push({
-								y: -34.82,
+								y: 37.36,
 								marker: {
 									symbol: 'url({% static 'assets/img/products/Radish_mini.png' %})'
 								}
@@ -509,6 +550,23 @@
 					}
 					var datacucumber = data[0].cucumber_change
 					var length = data[0].daylength
+					$('#information').empty()
+					var txt = "";
+					var cucumber_year = data[0].cucumber_year;
+					var cucumber_plmi = data[0].cucumber_plmi;
+					var cucumber_ratio = data[0].cucumber_ratio;
+					var cucumber_infor = data[0].cucumber_infor;
+					var cucumber_length = data[0].cucumber_length;
+					for(var i = 0 ; i< cucumber_length; i++){
+						if(cucumber_plmi[i] == '하락세'){
+							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + cucumber_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ cucumber_ratio[i] + '</h5>' + '<h6>' + cucumber_year[i] + '   :   ' + cucumber_infor[i] + '</h6></p>'
+					}else if(cucumber_plmi[i] == '상승세'){
+							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + cucumber_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + cucumber_ratio[i] + '</h5>' + '<h6>' + cucumber_year[i]  + '   :   ' + cucumber_infor[i] + '</h6></p>'
+						}
+					else{
+						txt +='<p><h5><a class="cart-btn"  style="background-color: #04B431; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + cucumber_year[i] + '</a>' + '<br/>' + cucumber_infor[i] + '</h5></p>'
+						}};
+					$("#information").append(txt)
 					var getDay4 = function() {
 					  var data = [];
 					  for (var i = 0; i< length; i++) {
@@ -520,15 +578,15 @@
 								}
 							})
 						}
-						else if(datacucumber[i] == -29.2){
+						else if(datacucumber[i] == -47.47){
 							data.push({
-								y:  -29.2,
+								y:  -47.47,
 								marker: {
 									symbol: 'url({% static 'assets/img/products/cucumber_mini.png' %})'
 								}
 							})
 						}
-						else if(datacucumber[i] == 34.15){
+						else if(datacucumber[i] == 75.28){
 							data.push({
 								y: 34.15,
 								marker: {
@@ -605,6 +663,23 @@
 					}
 					var datalettuce = data[0].lettuce_change
 					var length = data[0].daylength
+					$('#information').empty()
+					var txt = "";
+					var lettuce_year = data[0].lettuce_year;
+					var lettuce_plmi = data[0].lettuce_plmi;
+					var lettuce_ratio = data[0].lettuce_ratio;
+					var lettuce_infor = data[0].lettuce_infor;
+					var lettuce_length = data[0].lettuce_length;
+					for(var i = 0 ; i< lettuce_length; i++){
+						if(lettuce_plmi[i] == '하락세'){
+							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + lettuce_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ lettuce_ratio[i] + '</h5>' + '<h6>' + lettuce_year[i] + '   :   ' + lettuce_infor[i] + '</h6></p>'
+					}else if(lettuce_plmi[i] == '상승세'){
+							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + lettuce_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + lettuce_ratio[i] + '</h5>' + '<h6>' + lettuce_year[i]  + '   :   ' + lettuce_infor[i] + '</h6></p>'
+						}
+					else{
+						txt +='<p><h5><a class="cart-btn"  style="background-color: #088A29; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + lettuce_year[i] + '</a>' + '<br/>' + lettuce_infor[i] + '</h5></p>'
+						}};
+					$("#information").append(txt)
 					var getDay5 = function() {
 					  var data = [];
 					  for (var i = 0; i< length; i++) {
