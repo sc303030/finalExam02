@@ -131,8 +131,7 @@
 		<div class="product-section">
 			<div class="row">
 	<div class='highcharts-figure mb-80' id ="chartdiv"></div>
-	<div class="col-md-6" id="information">
-		roQKRwlsek
+	<div class="col-md-6" id="information"  style="width:100%;height:360px;overflow-y:auto;overflow-x:hidden">
 	</div>
 	</div>
 			</div>
@@ -166,7 +165,7 @@
 					}
 					var dataonion = data[0].onion_change
 					var length = data[0].daylength
-					$('#tablecheaper').empty()
+					$('#information').empty()
 					var txt = "";
 					var onion_year = data[0].onion_year;
 					var onion_plmi = data[0].onion_plmi;
@@ -174,14 +173,15 @@
 					var onion_infor = data[0].onion_infor;
 					var biglength = data[0].biglength;
 					for(var i = 0 ; i< biglength; i++){
-						txt +='<tr class="table-body-row">';
-						txt +='<td class="price-week-pred">' + onion_year[i] + '</td>'
-						txt +='<td class="price-twodaysago">' + onion_plmi[i] + '</td>'
-						txt +='<td class="price-twodaysago">' + onion_ratio[i] + '</td>'
-						txt +='<td class="price-twodaysago">' + onion_infor[i] + '</td>'
-						txt +='</tr>'
-					}
-					$("#tablecheaper").append(txt)
+						if(onion_plmi[i] == '하락세'){
+							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i] + '   :   ' + onion_infor[i] + '</h6></p>'
+					}else if(onion_plmi[i] == '상승세'){
+							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i]  + '   :   ' + onion_infor[i] + '</h6></p>'
+						}
+					else{
+						txt +='<p><h5><a class="cart-btn"  style="background-color: #FE9A2E; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + onion_year[i] + '</a>' + '<br/>' + onion_infor[i] + '</h5></p>'
+						}};
+					$("#information").append(txt)
 					var getDay = function() {
 					  var data = [];
 					  for (var i = 0; i< length; i++) {
@@ -277,6 +277,23 @@
 					}
 					var datacabbage = data[0].cabbage_change
 					var length = data[0].daylength
+					$('#information').empty()
+					var txt = "";
+					var onion_year = data[0].onion_year;
+					var onion_plmi = data[0].onion_plmi;
+					var onion_ratio = data[0].onion_ratio;
+					var onion_infor = data[0].onion_infor;
+					var biglength = data[0].biglength;
+					for(var i = 0 ; i< biglength; i++){
+						if(onion_plmi[i] == '하락세'){
+							txt +='<p>' + '<h5><a class="cart-btn" style="background-color: #FF0000; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;'+ onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i] + '   :   ' + onion_infor[i] + '</h6></p>'
+					}else if(onion_plmi[i] == '상승세'){
+							txt +='<p>' + '<h5><a class="cart-btn"  style="background-color: #01DFA5; padding: 5px 7px;width: 100px; text-align: center">' + onion_plmi[i] + '</a>' + '&nbsp;&nbsp;&nbsp;' + onion_ratio[i] + '</h5>' + '<h6>' + onion_year[i]  + '   :   ' + onion_infor[i] + '</h6></p>'
+						}
+					else{
+						txt +='<p><h5><a class="cart-btn"  style="background-color: #82FA58; padding: 5px 7px;width: 120px; text-align: center; margin-bottom: 10px;">'  + onion_year[i] + '</a>' + '<br/>' + onion_infor[i] + '</h5></p>'
+						}};
+					$("#information").append(txt)
 					var getDay2 = function() {
 					  var data = [];
 					  for (var i = 0; i< length; i++) {

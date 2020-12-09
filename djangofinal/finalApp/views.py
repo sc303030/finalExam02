@@ -455,7 +455,7 @@ def vegetableSelect(request, id):
                 lettuce_infor.append(list_num[4])
 
 
-    print(data_price_change)
+    print(onion_year)
     context = {
         'price_si': price_si,
         'price_mart': price_mart,
