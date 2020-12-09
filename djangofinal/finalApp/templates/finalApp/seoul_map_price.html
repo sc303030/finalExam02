@@ -14,12 +14,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
     <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
 
+	<link rel="stylesheet" href="{% static 'assets/css/video.css' %}">
+	<link href="{% static 'lity/dist/lity.css' %}" rel="stylesheet">
+	<script src="{% static 'lity/vendor/jquery.js' %}"></script>
+	<script src="{% static 'lity/dist/lity.js' %}"></script>
+
     <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
     <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
 
     <meta name="viewport" content="width=device-width,
         initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
 
     <style>.folium-map {
         position: absolute;
@@ -105,21 +111,21 @@
 <div class="container">
     <div class="more-products mt-80 mb-50" >
 			<div class="row">
-				<div class="col-md-8 text-center offset-lg-2">
+				<div class="col-md-8 text-center" style="margin-left: 200px;">
 					<div class="section-title" id="namediv">
 						{% csrf_token %}
 						<h3> 지역별 야채 <span class="orange-text">가격 차이</span></h3>
 					</div>
 				</div>
 				<div class="product-filters col-md-4" style="margin-left: -200px; margin-top: -25px;">
-					<ul><li><a>장보기 좋은 요일</a></li></ul>
+					<ul><li><a href="#dayday" data-lity>장보기 좋은 요일</a></li></ul>
 				</div>
 			</div>
 		</div>
     <div class="product-section" id="mapdivsection">
 			<div class="row product-lists" id="mapD">
 				<div class="folium-map" style="text-align: center;"><h3><br/><br/><br/><br/><br/><br/>야채를 선택해주세요<br/><br/>지도가 나오는 자리입니다.</h3></div>
-						<div class="cart-table-wrap ml-5" style="margin-bottom: 150px;">
+						<div class="cart-table-wrap ml-5" style="margin-bottom: 150px; ">
 						<h4 id="tablecheaname"><span class="orange-text">특정 야채</span> 가 싼 지역</h4>
 						<table class="price-table" style="width: 485px;">
 							<thead class="cart-table-head nowrap">
@@ -170,8 +176,84 @@
 					</div>
 	</div>
 </div>
+	<figure class="highcharts-figure" style="display: none">
+		<div  id="dayday"></div>
+	</figure>
 </div>
+
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/export-data.js"></script>
+	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	<script>
+			Highcharts.chart('dayday', {
+    title: {
+        text: 'Combination chart'
+    },
+    xAxis: {
+        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+    },
+    labels: {
+        items: [{
+            html: 'Total fruit consumption',
+            style: {
+                left: '50px',
+                top: '18px',
+                color: ( // theme
+                    Highcharts.defaultOptions.title.style &&
+                    Highcharts.defaultOptions.title.style.color
+                ) || 'black'
+            }
+        }]
+    },
+    series: [{
+        type: 'column',
+        name: 'Jane',
+        data: [3, 2, 1, 3, 4]
+    }, {
+        type: 'column',
+        name: 'John',
+        data: [2, 3, 5, 7, 6]
+    }, {
+        type: 'column',
+        name: 'Joe',
+        data: [4, 3, 3, 9, 0]
+    }, {
+        type: 'spline',
+        name: 'Average',
+        data: [3, 2.67, 3, 6.33, 3.33],
+        marker: {
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[3],
+            fillColor: 'white'
+        }
+    }, {
+        type: 'pie',
+        name: 'Total consumption',
+        data: [{
+            name: 'Jane',
+            y: 13,
+            color: Highcharts.getOptions().colors[0] // Jane's color
+        }, {
+            name: 'John',
+            y: 23,
+            color: Highcharts.getOptions().colors[1] // John's color
+        }, {
+            name: 'Joe',
+            y: 19,
+            color: Highcharts.getOptions().colors[2] // Joe's color
+        }],
+        center: [100, 80],
+        size: 100,
+        showInLegend: false,
+        dataLabels: {
+            enabled: false
+        }
+    }]
+});
+	</script>
 	<script>
 	$(document).ready(function() {
 		$('#vegetableclick1').click(function () {
@@ -198,14 +280,13 @@
 					var price = data[0].priceExPrice;
 					var martsi = data[0].priceExMartsi;
 					for(var i = 0 ; i<data[0].length; i++){
-						txt +='<tr class="table-body-row">';
+						txt +='<tr class="table-body-row" >';
 						txt +='<td class="price-week-pred">' + rank[i] + '</td>'
 						txt +='<td class="price-twodaysago">' + location[i] + '</td>'
 						txt +='<td class="price-twodaysago">' + place[i] + '</td>'
 						txt +='<td class="price-twodaysago">' + price[i] +' 원'+ '</td>'
 						txt +='<td class="price-twodaysago">' + martsi[i] + '</td>'
 						txt +='</tr>'
-
 					}
 					$("#tablecheaper").append(txt)
 					$('#tableexpensive').empty()
@@ -217,7 +298,7 @@
 					var martsi1 = data[0].priceChMartsi;
 					for(var i = 0 ; i<data[0].length; i++){
 						console.log(rank1[i], location1[i], place1[i], price1[i], martsi1[i])
-						txt1 +='<tr class="table-body-row">';
+						txt1 +='<tr class="table-body-row" >';
 						txt1 +='<td class="price-week-pred">' + rank1[i] + '</td>'
 						txt1 +='<td class="price-week-pred">' + location1[i] + '</td>'
 						txt1 +='<td class="price-week-pred">' + place1[i] + '</td>'

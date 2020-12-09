@@ -460,7 +460,6 @@ def vegetableSelect(request, id):
                 lettuce_ratio.append(list_num[3])
                 lettuce_infor.append(list_num[4])
 
-    print(onion_length)
     context = {
         'price_si': price_si,
         'price_mart': price_mart,
