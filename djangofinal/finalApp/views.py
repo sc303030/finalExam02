@@ -575,7 +575,6 @@ def mapseoulpriceajax(request, id):
     print(rank_num, price_ch_location,price_ch_place, price_ch_price,  price_ch_martsi)
 
 
-
     context = {
         'priceExLocation':price_ex_location,
         'priceExPlace': price_ex_place,
