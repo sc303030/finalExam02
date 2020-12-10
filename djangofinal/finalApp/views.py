@@ -53,7 +53,7 @@ def mapkakao(request):
     return render(request, 'finalApp/map_kakao.html')
 
 def additionalfactors(request):
-    return render(request, 'finalApp/additionalfactors_2.html')
+    return render(request, 'finalApp/additionalfactors.html')
 
 
 
@@ -693,3 +693,102 @@ def additionalfactors2(request):
     data = [context]
 
     return JsonResponse(data, safe=False)
+
+def search(request):
+    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> search")
+    item = request.POST['item']
+    qty = request.POST['qty']
+    # print(item , qty,' >>>item type:',type(item), '>>>qty type:',type(qty) )
+    qty = int(qty)
+    # print(item, qty, ' >>>item type:', type(item), '>>>qty type:', type(qty))
+    predData = 0
+
+    # 양파
+    if (item=='1'):
+        if(qty>101):
+            predData = predData*0
+        elif(qty>90):
+            predData += 2848
+        elif(qty>80):
+            predData += 2833
+        elif(qty>70):
+            predData += 3067
+        elif(qty>60):
+            predData += 3049
+        elif(qty>50):
+            predData += 3495
+        else :
+            predData = predData*0
+
+    # 배추
+    if (item=='2'):
+        if(qty>101):
+            predData = predData*0
+        elif(qty>90):
+            predData += 2862
+        elif(qty>80):
+            predData += 4325
+        elif(qty>70):
+            predData += 3886
+        elif(qty>60):
+            predData += 3456
+        elif(qty>50):
+            predData += 3367
+        else :
+            predData = predData*0
+
+    # 무
+    if (item=='3'):
+        if(qty>101):
+            predData = predData*0
+        elif(qty>90):
+            predData += 1712
+        elif(qty>80):
+            predData += 1922
+        elif(qty>70):
+            predData += 1985
+        elif(qty>60):
+            predData += 1897
+        elif(qty>50):
+            predData += 1986
+        else :
+            predData = predData*0
+
+    # 오이
+    if (item=='4'):
+        if(qty>101):
+            predData = predData*0
+        elif(qty>90):
+            predData += 723
+        elif(qty>80):
+            predData += 755
+        elif(qty>70):
+            predData += 761
+        elif(qty>60):
+            predData += 701
+        elif(qty>50):
+            predData += 527
+        else :
+            predData = predData*0
+
+    # 상추
+    if (item=='5'):
+        if(qty>101):
+            predData = predData*0
+        elif(qty>90):
+            predData += 953
+        elif(qty>80):
+            predData += 1240
+        elif(qty>70):
+            predData += 1173
+        elif(qty>60):
+            predData += 1066
+        elif(qty>50):
+            predData += 887
+        else :
+            predData = predData*0
+
+    print(format(predData, ','))
+    data = [{'pred' : format(predData, ',') }]
+
+    return JsonResponse(data , safe=False)
