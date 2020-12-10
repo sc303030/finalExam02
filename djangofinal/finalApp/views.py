@@ -836,6 +836,8 @@ def predict(request):
 
     pred = dummy1
 
+    ypred2 = int(round(-295.4008 + (dummy1 * 0.2202) + (dummy2 * 0.0005) + (dummy3 * 0.4867) + (dummy5 * 3.4261) + (dummy8 * 1.2627),0))
+
     dataset = pd.read_excel('./static/무_더미(예측).xlsx', encoding='utf-8-sig')
     dataset.drop(['일자'], axis=1, inplace=True)
 
@@ -994,26 +996,25 @@ def predict(request):
     models = [lgb_reg, rf_reg, gb_reg, xgb_reg]
 
     X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
-    print(X_train.shape, X_test.shape)
+
 
     er = VotingRegressor([('xgb_reg', xgb_reg), ('gb_reg', gb_reg), ('lgb_reg', lgb_reg)])
-    print(er.fit(X_train, y_train).predict(X_test))
+
     y_pred = er.fit(X_train, y_train).predict(X_test)
     er.fit(X_train, y_train).score(X_test, y_test)
 
-    y_target = dataset['가격']
-    X_data = dataset.drop(['가격'], axis=1, inplace=False)
     X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
     estimators = ([('xgb_reg', xgb_reg), ('rf_reg', rf_reg), ('lgb_reg', lgb_reg), ('gb_reg', gb_reg)])
     reg = StackingRegressor(estimators=estimators,
                             final_estimator=RandomForestRegressor(n_estimators=10, random_state=42))
     reg.fit(X_train, y_train).score(X_test, y_test)
-
-    ypred = xgb_reg.predict(dummydf)
+    print('reg 다음')
+    ypred1 = gb_reg.predict(dummydf)
 
 
 
     data = [{
-        'pred' : ypred
+        'oneresult' : format(ypred1,','),
+        'tworesult' : format(ypred2,',')
     }]
     return JsonResponse(data, safe=False)
