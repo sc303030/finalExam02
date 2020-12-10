@@ -869,86 +869,6 @@ def predict(request):
         score = model.score(X_data, y_target)
         kf_cv_scores = cross_val_score(model, X_data, y_target)
 
-    def XGBhyperParameterTuning(X_train, y_train):
-        param_tuning = {
-            'learning_rate': [0.01, 0.03, 0.1],
-            'max_depth': [3, 5, 7, 10],
-            'min_child_weight': [1, 3, 5],
-            'subsample': [0.5, 0.7],
-            'colsample_bytree': [0.5, 0.7],
-            'n_estimators': [100, 200, 500],
-            'objective': ['reg:squarederror'],
-            'gamma': [0.1, 0.2, 0.3, 0.4],
-
-        }
-
-        xgb_model = XGBRegressor()
-
-        gsearch = GridSearchCV(estimator=xgb_model,
-                               param_grid=param_tuning,
-                               # scoring = 'neg_mean_absolute_error', #MAE
-                               # scoring = 'neg_mean_squared_error',  #MSE
-                               cv=3,
-                               n_jobs=-1,
-                               verbose=1)
-
-        gsearch.fit(X_train, y_train)
-
-        return gsearch.best_params_
-
-    def RFRhyperParameterTuning(X_train, y_train):
-        param_tuning = {
-            'bootstrap': [True],
-            'max_depth': [3, 5, 7, 10],
-            'max_features': [2, 3],
-            'min_samples_leaf': [3, 4, 5],
-            'min_samples_split': [8, 10, 12],
-            'n_estimators': [100, 200, 300, 1000],
-
-        }
-
-        rf_model = RandomForestRegressor()
-
-        gsearch = GridSearchCV(estimator=rf_model,
-                               param_grid=param_tuning,
-                               # scoring = 'neg_mean_absolute_error', #MAE
-                               # scoring = 'neg_mean_squared_error',  #MSE
-                               cv=3,
-                               n_jobs=-1,
-                               verbose=1)
-
-        gsearch.fit(X_train, y_train)
-
-        return gsearch.best_params_
-
-    def LGBMhyperParameterTuning(X_train, y_train):
-        param_tuning = {
-            'learning_rate': [0.01, 0.03, 0.1],
-            'max_depth': [3, 5, 7, 10],
-            'min_child_samples': [10, 20, 30],
-            'subsample': [0.5, 0.7],
-            'colsample_bytree': [0.5, 0.7],
-            'n_estimators': [100, 200, 500],
-            'objective': ['regression'],
-            'gamma': [0.1, 0.2, 0.3],
-            'num_leaves': [6, 8, 10]
-
-        }
-
-        lgbm = LGBMRegressor()
-
-        gsearch = GridSearchCV(estimator=lgbm,
-                               param_grid=param_tuning,
-                               # scoring = 'neg_mean_absolute_error', #MAE
-                               # scoring = 'neg_mean_squared_error',  #MSE
-                               cv=3,
-                               n_jobs=-1,
-                               verbose=1)
-
-        gsearch.fit(X_train, y_train)
-
-        return gsearch.best_params_
-
     def GBRhyperParameterTuning(X_train, y_train):
         param_tuning = {
             'learning_rate': [0.01, 0.05, 0.1],
@@ -972,34 +892,6 @@ def predict(request):
 
         return gsearch.best_params_
 
-    xgb_reg = XGBRegressor(colsample_bytree=0.7,
-                           gamma=0.1,
-                           learning_rate=0.03,
-                           max_depth=3,
-                           min_child_weight=5,
-                           n_estimators=200,
-                           objective='reg:squarederror',
-                           subsample=0.7)
-
-    rf_reg = RandomForestRegressor(random_state=0,
-                                   bootstrap=[True],
-                                   max_depth=7,
-                                   max_features=3,
-                                   min_samples_leaf=3,
-                                   min_samples_split=8,
-                                   n_estimators=100
-                                   )
-
-    lgb_reg = LGBMRegressor(colsample_bytree=0.7,
-                            gamma=0.1,
-                            learning_rate=0.1,
-                            max_depth=7,
-                            min_child_samples=20,
-                            n_estimators=100,
-                            num_leaves=8,
-                            objective='regression',
-                            subsample=0.5)
-
     gb_reg = GradientBoostingRegressor(random_state=0,
                                        learning_rate=0.1,
                                        max_depth=7,
@@ -1007,18 +899,18 @@ def predict(request):
                                        subsample=0.7
                                        )
 
-    models = [lgb_reg, rf_reg, gb_reg, xgb_reg]
+    models = [gb_reg]
 
     for model in models:
         get_model_cv_prediction(model, X_train, y_train)
 
-    er = VotingRegressor([('xgb_reg', xgb_reg), ('gb_reg', gb_reg), ('lgb_reg', lgb_reg)])
+    er = VotingRegressor([('gb_reg', gb_reg)])
 
     y_pred = er.fit(X_train, y_train).predict(X_test)
     er.fit(X_train, y_train).score(X_test, y_test)
 
     X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
-    estimators = ([('xgb_reg', xgb_reg), ('rf_reg', rf_reg), ('lgb_reg', lgb_reg), ('gb_reg', gb_reg)])
+    estimators = ([('gb_reg', gb_reg)])
     reg = StackingRegressor(estimators=estimators,
                             final_estimator=RandomForestRegressor(n_estimators=10, random_state=42))
     reg.fit(X_train, y_train).score(X_test, y_test)
