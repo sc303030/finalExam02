@@ -27,4 +27,5 @@ urlpatterns = [
     path('additionalfactors/', views.additionalfactors, name='additionalfactors'),
     path('additionalfactors2/', views.additionalfactors2, name='additionalfactors2'),
     path('search/', views.search, name='search'),
+    path('predict/', views.predict, name='predict'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

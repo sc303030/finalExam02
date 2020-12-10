@@ -3,6 +3,35 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 import csv
+from sklearn.model_selection import cross_val_score, train_test_split, KFold
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import GridSearchCV
+from lightgbm import LGBMRegressor
+
+from xgboost import XGBRegressor
+
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+
+from sklearn.ensemble import VotingRegressor
+
+from xgboost import plot_importance
+
+from sklearn.datasets import load_diabetes
+from sklearn.linear_model import RidgeCV
+from sklearn.svm import LinearSVR
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import StackingRegressor
+
 
 
 # Create your views here.
@@ -696,8 +725,10 @@ def additionalfactors2(request):
 
 def search(request):
     # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> search")
+
     item = request.POST['item']
     qty = request.POST['qty']
+
     # print(item , qty,' >>>item type:',type(item), '>>>qty type:',type(qty) )
     qty = int(qty)
     # print(item, qty, ' >>>item type:', type(item), '>>>qty type:', type(qty))
@@ -788,7 +819,201 @@ def search(request):
         else :
             predData = predData*0
 
-    print(format(predData, ','))
     data = [{'pred' : format(predData, ',') }]
 
     return JsonResponse(data , safe=False)
+
+def predict(request):
+
+    dummy1 = float(request.POST['dummy1'])
+    dummy2 = float(request.POST['dummy2'])
+    dummy3 = float(request.POST['dummy3'])
+    dummy4 = float(request.POST['dummy4'])
+    dummy5 = float(request.POST['dummy5'])
+    dummy6 = float(request.POST['dummy6'])
+    dummy7 = float(request.POST['dummy7'])
+    dummy8 = float(request.POST['dummy8'])
+
+    pred = dummy1
+
+    dataset = pd.read_excel('./static/무_더미(예측).xlsx', encoding='utf-8-sig')
+    dataset.drop(['일자'], axis=1, inplace=True)
+
+    dummydf = pd.DataFrame({
+        '경락가평균가격' : [dummy1],
+        '반입량' :[dummy2],
+        '유가 전국평균가격' : [dummy3],
+        '유무':[dummy4],
+        '최저기온(°C)':[dummy5],
+        '최고기온(°C)':[dummy6],
+        '일강수량(mm)':[dummy7],
+        '도매가격': [dummy8]
+    })
+
+    y_target = dataset['가격']
+    X_data = dataset.drop(['가격'], axis=1, inplace=False)
+
+    def XGBhyperParameterTuning(X_train, y_train):
+        param_tuning = {
+            'learning_rate': [0.01, 0.03, 0.1],
+            'max_depth': [3, 5, 7, 10],
+            'min_child_weight': [1, 3, 5],
+            'subsample': [0.5, 0.7],
+            'colsample_bytree': [0.5, 0.7],
+            'n_estimators': [100, 200, 500],
+            'objective': ['reg:squarederror'],
+            'gamma': [0.1, 0.2, 0.3, 0.4],
+
+        }
+
+        xgb_model = XGBRegressor()
+
+        gsearch = GridSearchCV(estimator=xgb_model,
+                               param_grid=param_tuning,
+                               # scoring = 'neg_mean_absolute_error', #MAE
+                               # scoring = 'neg_mean_squared_error',  #MSE
+                               cv=3,
+                               n_jobs=-1,
+                               verbose=1)
+
+        gsearch.fit(X_train, y_train)
+
+        return gsearch.best_params_
+
+    def RFRhyperParameterTuning(X_train, y_train):
+        param_tuning = {
+            'bootstrap': [True],
+            'max_depth': [3, 5, 7, 10],
+            'max_features': [2, 3],
+            'min_samples_leaf': [3, 4, 5],
+            'min_samples_split': [8, 10, 12],
+            'n_estimators': [100, 200, 300, 1000],
+
+        }
+
+        rf_model = RandomForestRegressor()
+
+        gsearch = GridSearchCV(estimator=rf_model,
+                               param_grid=param_tuning,
+                               # scoring = 'neg_mean_absolute_error', #MAE
+                               # scoring = 'neg_mean_squared_error',  #MSE
+                               cv=3,
+                               n_jobs=-1,
+                               verbose=1)
+
+        gsearch.fit(X_train, y_train)
+
+        return gsearch.best_params_
+
+    def LGBMhyperParameterTuning(X_train, y_train):
+        param_tuning = {
+            'learning_rate': [0.01, 0.03, 0.1],
+            'max_depth': [3, 5, 7, 10],
+            'min_child_samples': [10, 20, 30],
+            'subsample': [0.5, 0.7],
+            'colsample_bytree': [0.5, 0.7],
+            'n_estimators': [100, 200, 500],
+            'objective': ['regression'],
+            'gamma': [0.1, 0.2, 0.3],
+            'num_leaves': [6, 8, 10]
+
+        }
+
+        lgbm = LGBMRegressor()
+
+        gsearch = GridSearchCV(estimator=lgbm,
+                               param_grid=param_tuning,
+                               # scoring = 'neg_mean_absolute_error', #MAE
+                               # scoring = 'neg_mean_squared_error',  #MSE
+                               cv=3,
+                               n_jobs=-1,
+                               verbose=1)
+
+        gsearch.fit(X_train, y_train)
+
+        return gsearch.best_params_
+
+    def GBRhyperParameterTuning(X_train, y_train):
+        param_tuning = {
+            'learning_rate': [0.01, 0.05, 0.1],
+            'max_depth': [3, 5, 7, 10],
+            'subsample': [0.5, 0.7],
+            'n_estimators': [100, 200, 500]
+
+        }
+
+        gb_model = GradientBoostingRegressor()
+
+        gsearch = GridSearchCV(estimator=gb_model,
+                               param_grid=param_tuning,
+                               # scoring = 'neg_mean_absolute_error', #MAE
+                               # scoring = 'neg_mean_squared_error',  #MSE
+                               cv=3,
+                               n_jobs=-1,
+                               verbose=1)
+
+        gsearch.fit(X_train, y_train)
+
+        return gsearch.best_params_
+
+    xgb_reg = XGBRegressor(colsample_bytree=0.7,
+                           gamma=0.1,
+                           learning_rate=0.03,
+                           max_depth=3,
+                           min_child_weight=5,
+                           n_estimators=200,
+                           objective='reg:squarederror',
+                           subsample=0.7)
+
+    rf_reg = RandomForestRegressor(random_state=0,
+                                   bootstrap=[True],
+                                   max_depth=7,
+                                   max_features=3,
+                                   min_samples_leaf=3,
+                                   min_samples_split=8,
+                                   n_estimators=100
+                                   )
+
+    lgb_reg = LGBMRegressor(colsample_bytree=0.7,
+                            gamma=0.1,
+                            learning_rate=0.1,
+                            max_depth=7,
+                            min_child_samples=20,
+                            n_estimators=100,
+                            num_leaves=8,
+                            objective='regression',
+                            subsample=0.5)
+
+    gb_reg = GradientBoostingRegressor(random_state=0,
+                                       learning_rate=0.1,
+                                       max_depth=7,
+                                       n_estimators=100,
+                                       subsample=0.7
+                                       )
+
+    models = [lgb_reg, rf_reg, gb_reg, xgb_reg]
+
+    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
+    print(X_train.shape, X_test.shape)
+
+    er = VotingRegressor([('xgb_reg', xgb_reg), ('gb_reg', gb_reg), ('lgb_reg', lgb_reg)])
+    print(er.fit(X_train, y_train).predict(X_test))
+    y_pred = er.fit(X_train, y_train).predict(X_test)
+    er.fit(X_train, y_train).score(X_test, y_test)
+
+    y_target = dataset['가격']
+    X_data = dataset.drop(['가격'], axis=1, inplace=False)
+    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
+    estimators = ([('xgb_reg', xgb_reg), ('rf_reg', rf_reg), ('lgb_reg', lgb_reg), ('gb_reg', gb_reg)])
+    reg = StackingRegressor(estimators=estimators,
+                            final_estimator=RandomForestRegressor(n_estimators=10, random_state=42))
+    reg.fit(X_train, y_train).score(X_test, y_test)
+
+    ypred = xgb_reg.predict(dummydf)
+
+
+
+    data = [{
+        'pred' : ypred
+    }]
+    return JsonResponse(data, safe=False)
