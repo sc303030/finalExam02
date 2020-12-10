@@ -15,6 +15,8 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV
 from lightgbm import LGBMRegressor
 
+from sklearn.exceptions import NotFittedError
+
 from xgboost import XGBRegressor
 
 
@@ -836,10 +838,15 @@ def predict(request):
 
     pred = dummy1
 
-    ypred2 = int(round(-295.4008 + (dummy1 * 0.2202) + (dummy2 * 0.0005) + (dummy3 * 0.4867) + (dummy5 * 3.4261) + (dummy8 * 1.2627),0))
+    ypred2 = int(round((-275.1522 + (dummy1 * 0.2110) + (dummy2 * 0.0005) + (dummy3 * 0.4948) + (dummy4 * 16.9529) + (dummy5 * 6.0531) + (dummy6 * -2.9252) + (dummy7 * 0.6929) + (dummy8 * 1.2675)),0))
 
     dataset = pd.read_excel('./static/무_더미(예측).xlsx', encoding='utf-8-sig')
     dataset.drop(['일자'], axis=1, inplace=True)
+
+    y_target = dataset['가격']
+    X_data = dataset.drop(['가격'], axis=1, inplace=False)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
 
     dummydf = pd.DataFrame({
         '경락가평균가격' : [dummy1],
@@ -852,8 +859,15 @@ def predict(request):
         '도매가격': [dummy8]
     })
 
-    y_target = dataset['가격']
-    X_data = dataset.drop(['가격'], axis=1, inplace=False)
+
+
+    def get_model_cv_prediction(model, X_data, y_target):
+        neg_mse_scores = cross_val_score(model, X_data, y_target, scoring="neg_mean_squared_error", cv=3)
+        rmse_scores = np.sqrt(-1 * neg_mse_scores)
+        avg_rmse = np.mean(rmse_scores)
+        model.fit(X_data, y_target)
+        score = model.score(X_data, y_target)
+        kf_cv_scores = cross_val_score(model, X_data, y_target)
 
     def XGBhyperParameterTuning(X_train, y_train):
         param_tuning = {
@@ -995,8 +1009,8 @@ def predict(request):
 
     models = [lgb_reg, rf_reg, gb_reg, xgb_reg]
 
-    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
-
+    for model in models:
+        get_model_cv_prediction(model, X_train, y_train)
 
     er = VotingRegressor([('xgb_reg', xgb_reg), ('gb_reg', gb_reg), ('lgb_reg', lgb_reg)])
 
@@ -1008,13 +1022,11 @@ def predict(request):
     reg = StackingRegressor(estimators=estimators,
                             final_estimator=RandomForestRegressor(n_estimators=10, random_state=42))
     reg.fit(X_train, y_train).score(X_test, y_test)
-    print('reg 다음')
-    ypred1 = gb_reg.predict(dummydf)
 
-
+    ypred1  = gb_reg.predict(dummydf)
 
     data = [{
-        'oneresult' : format(ypred1,','),
+        'oneresult' : format(int(round(ypred1[0],0)),','),
         'tworesult' : format(ypred2,',')
     }]
     return JsonResponse(data, safe=False)
