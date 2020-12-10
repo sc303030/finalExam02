@@ -92,7 +92,7 @@
 						</div>
 					</div>
 					<div class="container p-3 my-3 text-center bg-light text-dark"> <h2><span class="orange-text">" 예상 가격은
-						<input class='bg-light' type="text" id="result" class="col-xs-2" style="text-align: end; padding: 10px; border:none; width:200px; border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;">원 입니다 "</span></h2></div>
+						<input class='bg-light' placeholder="0000" type="text" id="result" class="col-xs-2" style="text-align: end; padding: 10px; border:none; width:200px; border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;">원 입니다 "</span></h2></div>
                 </div>
             </div>
 		</div>
@@ -122,10 +122,10 @@
 
 						<div class="row my-100" align="center" aria-multiselectable="true" id="accordion">
 							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv1" class="cart-btn" id="cabbageclick" data-parent="#accordion">배추김치</a>
-							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv2" class="cart-btn" id="radishclick" data-parent="#accordion">무조림</a>
-							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv3" class="cart-btn" id="cucumberclick" data-parent="#accordion">오이소박이</a>
-							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv4" class="cart-btn" id="onionclick" data-parent="#accordion">양파장아찌</a>
-							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv5" class="cart-btn" id="lettuceclick" data-parent="#accordion">상추쌈</a>
+							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv1" class="cart-btn" id="radishclick" data-parent="#accordion">무조림</a>
+							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv1" class="cart-btn" id="cucumberclick" data-parent="#accordion">오이소박이</a>
+							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv1" class="cart-btn" id="onionclick" data-parent="#accordion">양파장아찌</a>
+							<a data-toggle="collapse" aria-expanded="false" aria-controls="quizdiv" href="#quizdiv1" class="cart-btn" id="lettuceclick" data-parent="#accordion">상추쌈</a>
 						</div>
 					</div>
 
@@ -157,106 +157,6 @@
 				</div>
 			</div>
 		</div>
-<!--		<div class=" container collapse" id="quizdiv2" data-parent="#accordion">-->
-<!--			<div class="col-md-push-(12)">-->
-<!--				<div class="single-product mt-80 mb-100" >-->
-<!--					<div class="container">-->
-<!--						<div class="row">-->
-<!--							<div class="card card-body">-->
-<!--    							<div class="row">-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_o.png' %}" class="img-responsive" >-->
-<!--										<p><h4><strong>무 가격이 <span class="orange-text">오를 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalYes2">select</button>-->
-<!--									</div>-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_x.png' %}" class="img-responsive" >-->
-<!--										<p><h4><strong>무 가격이 <span class="orange-text">오르지 않을 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalNo2">select</button>-->
-<!--									</div>-->
-<!--								</div>-->
-
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--		<div class="container collapse" id="quizdiv3"  >-->
-<!--			<div class="col-md-push-(12)">-->
-<!--				<div class="single-product mt-80 mb-100" >-->
-<!--					<div class="container">-->
-<!--						<div class="row">-->
-<!--							<div class="card card-body">-->
-<!--    							<div class="row">-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_o.png' %}" class="img-responsive">-->
-<!--										<p><h4><strong>오이 가격이 <span class="orange-text">오를 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalYes3">select</button>-->
-<!--									</div>-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_x.png' %}" class="img-responsive" >-->
-<!--										<p><h4><strong>오이 가격이 <span class="orange-text">오르지 않을 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalNo3">select</button>-->
-<!--									</div>-->
-<!--								</div>-->
-
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--		<div class="container collapse" id="quizdiv4" >-->
-<!--			<div class="col-md-push-(12)">-->
-<!--				<div class="single-product mt-80 mb-100" >-->
-<!--					<div class="container">-->
-<!--						<div class="row">-->
-<!--							<div class="card card-body">-->
-<!--    							<div class="row">-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_o.png' %}" class="img-responsive" >-->
-<!--										<p><h4><strong>양파 가격이 <span class="orange-text">오를 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalYes4">select</button>-->
-<!--									</div>-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_x.png' %}" class="img-responsive">-->
-<!--										<p><h4><strong>양파 가격이 <span class="orange-text">오르지 않을 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalNo4">select</button>-->
-<!--									</div>-->
-<!--								</div>-->
-
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--		<div class="container collapse" id="quizdiv5" >-->
-<!--			<div class="col-md-push-(12)">-->
-<!--				<div class="single-product mt-80 mb-100" >-->
-<!--					<div class="container">-->
-<!--						<div class="row">-->
-<!--							<div class="card card-body">-->
-<!--    							<div class="row">-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_o.png' %}" class="img-responsive">-->
-<!--										<p><h4><strong>상추 가격이 <span class="orange-text">오를 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalYes5">select</button>-->
-<!--									</div>-->
-<!--									<div class="col-md-6" align="center">-->
-<!--										<img src="{% static 'assets/img/additional/quiz_x.png' %}" class="img-responsive" >-->
-<!--										<p><h4><strong>상추 가격이 <span class="orange-text">오르지 않을 것이다</span></strong></h4></p>-->
-<!--										<button type="button" class="btn-btn btn-lg" data-toggle="modal" data-target="#myModalNo5">select</button>-->
-<!--									</div>-->
-<!--								</div>-->
-
-<!--							</div>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
     </section>
 
 	<!--YES Modal -->
@@ -665,7 +565,7 @@
 		zoomType: 'xy'
 	  },
 	  title: {
-		text: '[예제] 주식과 농산물가격'
+		text: '[예시] 주식과 농산물가격'
 	  },
 	  subtitle: {
 		text: 'Stock and agricultural product prices'
