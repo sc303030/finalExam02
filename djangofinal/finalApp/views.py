@@ -838,7 +838,7 @@ def predict(request):
 
     pred = dummy1
 
-    ypred2 = int(round((-295.4008  +  (dummy1* 0.2202)  + (dummy2 *   0.0005)   + (dummy3 *  0.4867) +  (dummy5  * 3.4261)    + (dummy8 * 1.2627)),0))
+    ypred2 = int(round((-275.1522 + (dummy1 * 0.2110) + (dummy2 * 0.0005) + (dummy3 * 0.4948) + (dummy4 * 16.9529) + (dummy5 * 6.0531) + (dummy6 * -2.9252) + (dummy7 * 0.6929) + (dummy8 * 1.2675)),0))
 
     dataset = pd.read_excel('./static/무_시장.xlsx', encoding='utf-8-sig')
     # dataset.drop(['일자'], axis=1, inplace=True)
