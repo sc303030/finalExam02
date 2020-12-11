@@ -838,10 +838,10 @@ def predict(request):
 
     pred = dummy1
 
-    ypred2 = int(round((-275.1522 + (dummy1 * 0.2110) + (dummy2 * 0.0005) + (dummy3 * 0.4948) + (dummy4 * 16.9529) + (dummy5 * 6.0531) + (dummy6 * -2.9252) + (dummy7 * 0.6929) + (dummy8 * 1.2675)),0))
+    ypred2 = int(round((-295.4008  +  (dummy1* 0.2202)  + (dummy2 *   0.0005)   + (dummy3 *  0.4867) +  (dummy5  * 3.4261)    + (dummy8 * 1.2627)),0))
 
-    dataset = pd.read_excel('./static/무_더미(예측).xlsx', encoding='utf-8-sig')
-    dataset.drop(['일자'], axis=1, inplace=True)
+    dataset = pd.read_excel('./static/무_시장.xlsx', encoding='utf-8-sig')
+    # dataset.drop(['일자'], axis=1, inplace=True)
 
     y_target = dataset['가격']
     X_data = dataset.drop(['가격'], axis=1, inplace=False)
@@ -863,11 +863,7 @@ def predict(request):
 
     def get_model_cv_prediction(model, X_data, y_target):
         neg_mse_scores = cross_val_score(model, X_data, y_target, scoring="neg_mean_squared_error", cv=3)
-        rmse_scores = np.sqrt(-1 * neg_mse_scores)
-        avg_rmse = np.mean(rmse_scores)
         model.fit(X_data, y_target)
-        score = model.score(X_data, y_target)
-        kf_cv_scores = cross_val_score(model, X_data, y_target)
 
     def GBRhyperParameterTuning(X_train, y_train):
         param_tuning = {
@@ -906,7 +902,6 @@ def predict(request):
 
     er = VotingRegressor([('gb_reg', gb_reg)])
 
-    y_pred = er.fit(X_train, y_train).predict(X_test)
     er.fit(X_train, y_train).score(X_test, y_test)
 
     X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
