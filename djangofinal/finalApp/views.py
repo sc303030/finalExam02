@@ -34,7 +34,7 @@ from sklearn.svm import LinearSVR
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import StackingRegressor
 
-
+from datetime import datetime, timedelta
 
 # Create your views here.
 
@@ -46,7 +46,7 @@ def about(request):
 
 
 def shop(request):
-    return render(request, 'finalApp/shop_2.html')
+    return render(request, 'finalApp/shop_3.html')
 
 
 def selectshop(request):
@@ -632,27 +632,113 @@ def mapseoulpriceajax(request, id):
 def vegetableSelectProducer(request, id):
     print(id)
     print('----------- ajax json vegetableSelectProducer')
-    price_total = []
+    price_mart = []
+    price_sijang = []
     category = []
     days = []
-    with open('./static/seoul_mart_jang_graph_select_test_producer02.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
+
+    trData = []
+    martDic = {}
+    sijangDic ={}
+
+    fm_number = []
+    fm_name = []
+    fs_number = []
+    fs_name = []
+
+
+
+    # 변수 중요도 그래프 시장&마트
+    with open('./static/feature_importance_시장_최종.csv', mode='r', encoding='utf-8-sig') as feature_lists_s:
+        reader = csv.reader(feature_lists_s)
+        for list_num in reader:
+            if list_num[2] == str(id):
+                fs_number.append(float(list_num[1]))
+                fs_name.append(list_num[0])
+                fm_number.append(float(list_num[3]))
+
+
+
+    todayTest = datetime.today().strftime('%Y-%m-%d')
+    yesterdayTest = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
+    twodaysagoTest = (datetime.today() - timedelta(2)).strftime('%Y-%m-%d')
+
+
+    with open('./static/sijang_pred_final.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
         reader = csv.reader(vegetable_lists_p)
 
         for list_num in reader:
             if list_num[2] == str(id):
-                price_total.append(int(list_num[0]))
+                price_mart.append(int(list_num[3]))
+                price_sijang.append(int(list_num[0]))
                 category.append(list_num[2])
                 days.append(list_num[1])
 
+                martDic['kind'] = '마트'
+                sijangDic['kind'] = '시장'
+
+                weeklyMart1 = int(np.mean(price_mart))
+                weeklyMart2 = int(np.trunc(weeklyMart1))
+                martDic['weekly'] = weeklyMart2
+
+                weeklySijang1 = int(np.mean(price_sijang))
+                weeklySijang2 = int(np.trunc(weeklySijang1))
+                sijangDic['weekly'] = weeklySijang2
+
+                if list_num[1] == todayTest:
+                    print("if1")
+                    martDic['today'] = (int(list_num[3]))
+                    sijangDic['today'] = (int(list_num[0]))
+
+                if list_num[1] == yesterdayTest:
+                    martDic['yesterday'] = (int(list_num[3]))
+                    sijangDic['yesterday'] = (int(list_num[0]))
+                    print("if2")
+
+                if list_num[1] == twodaysagoTest:
+                    martDic['twodaysago'] = (int(list_num[3]))
+                    sijangDic['twodaysago'] = (int(list_num[0]))
+                    print("if3")
+
+        martDic['gap'] = martDic['twodaysago'] - martDic['yesterday']
+        sijangDic['gap'] = sijangDic['twodaysago'] - sijangDic['yesterday']
+
+        martDic['weekly'] = format(martDic['weekly'],',')
+        sijangDic['weekly'] = format(sijangDic['weekly'],',')
+        martDic['today'] = format(martDic['today'],',')
+        sijangDic['today'] = format(sijangDic['today'],',')
+        martDic['yesterday'] = format(martDic['yesterday'],',')
+        sijangDic['yesterday'] = format(sijangDic['yesterday'],',')
+        martDic['twodaysago'] = format(martDic['twodaysago'],',')
+        sijangDic['twodaysago'] = format(sijangDic['twodaysago'],',')
+        martDic['gap'] = format(martDic['gap'],',')
+        sijangDic['gap'] = format(sijangDic['gap'],',')
+
+        trData.append(martDic)
+        trData.append(sijangDic)
+
+        print(">>>>>>>", trData)
+        # print(">>>>>>>>", type(datetime.today().strftime('%Y-%m-%d')), datetime.today().strftime('%Y-%m-%d'))
+        # print(">>>>>>>> list_num[1]  type: ", type(list_num[1]), list_num[1])
+
 
     context = {
-
-        'price_total': price_total,
+        'price_mart': price_mart,
+        'price_sijang' : price_sijang,
         'days': days,
-        'category': category[0]
+        'category': category[0],
+
+        'trData' : trData,
+        'fm_number' : fm_number,
+        'fm_name' : fm_name,
+        'fs_number' : fs_number,
+        'fs_name' : fs_name
+
     }
-    data = [context]
+    data = []
+    data.append(context)
     return JsonResponse(data, safe=False)
+
 def get_map_kakao(request, id):
     print(id)
     ms = []
