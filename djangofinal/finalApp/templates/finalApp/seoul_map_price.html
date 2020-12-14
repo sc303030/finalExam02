@@ -48,7 +48,7 @@
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
                         <p>빅데이터가 말하는</p>
-						<h1>서울 야채 가격</h1>
+						<h1>채소별 싼 곳 비싼 곳</h1>
 					</div>
 				</div>
 			</div>
@@ -124,7 +124,8 @@
 	</div>
     <div class="product-section" id="mapdivsection">
 			<div class="row product-lists" id="mapD">
-				<div class="folium-map" style="text-align: center;"><h3><br/><br/><br/><br/><br/><br/>야채를 선택해주세요<br/><br/>지도가 나오는 자리입니다.</h3></div>
+				<div class="folium-map" id='nana' style="text-align: center;"><h3><br/><br/><br/>
+					<br/><br/><br/>야채를 선택해주세요<br/><br/>지도가 나오는 자리입니다.</h3></div>
 						<div class="cart-table-wrap ml-5" style="margin-bottom: 275px;">
 						<h4 id="tablecheaname"><span class="orange-text">특정 야채</span> 가 싼 지역</h4>
 						<table class="price-table" style="width: 485px; position: absolute">
@@ -271,7 +272,7 @@
 	<script>
 	$(document).ready(function() {
 		$('#vegetableclick1').click(function () {
-			$('.folium-map').empty()
+			$('.folium-map').removeAttr('id')
 			$('#mapD').append('<div class="folium-map" id="map_b441232fe3244d87946a827f82cbdf05"></div>')
 			callonion()
 			$.ajax({
@@ -325,7 +326,8 @@
 			});
 		});
 		$('#vegetableclick2').click(function () {
-			$('.folium-map').empty()
+			$('.folium-map').removeAttr('id')
+			$('#mapD').removeClass('folium-map')
 			$('#mapD').append('<div class="folium-map" id="map_877ac42d284b46e4b2c6085e33cf2961"></div>')
 			callcabbage()
 			$.ajax({
@@ -380,7 +382,7 @@
 			});
 		});
 		$('#vegetableclick3').click(function () {
-			$('.folium-map').empty()
+			$('.folium-map').removeAttr('id')
 			$('#mapD').append('<div class="folium-map" id="map_561fb26abd434288826c3d00e375d961"></div>')
 			callraddish()
 			$.ajax({
@@ -435,7 +437,7 @@
 			});
 		});
 		$('#vegetableclick4').click(function () {
-			$('.folium-map').empty()
+			$('.folium-map').removeAttr('id')
 			$('#mapD').append('<div class="folium-map" id="map_a6502cb40e034aad9808a8252448955e"></div>')
 			callcucumber()
 			$.ajax({
@@ -490,7 +492,7 @@
 			});
 		});
 		$('#vegetableclick5').click(function () {
-			$('.folium-map').empty()
+			$('.folium-map').removeAttr('id')
 			$('#mapD').append('<div class="folium-map" id="map_f32c712800364f35bba4225d0441ebe2"></div>')
 			calllettuce()
 			$.ajax({
@@ -617,38 +619,38 @@
               .domain([2301.6666666666665, 3650.0])
               .range([0, 400]);
 
-    color_map_f6a4a4fdafdc46f68dc9e181cd576a49.legend = L.control({position: 'topright'});
-    color_map_f6a4a4fdafdc46f68dc9e181cd576a49.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_f6a4a4fdafdc46f68dc9e181cd576a49.legend = L.control({});
+    color_map_f6a4a4fdafdc46f68dc9e181cd576a49.legend.onAdd = function (map) {var div = L.DomUtil.create('div'); return div};
     color_map_f6a4a4fdafdc46f68dc9e181cd576a49.legend.addTo(map_b441232fe3244d87946a827f82cbdf05);
 
     color_map_f6a4a4fdafdc46f68dc9e181cd576a49.xAxis = d3.svg.axis()
-        .scale(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x)
-        .orient("top")
-        .tickSize(1)
-        .tickValues([2301.6666666666665, 2526.3888888888887, 2751.111111111111, 2975.833333333333, 3200.5555555555557, 3425.277777777778, 3650.0]);
+        // .scale(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x)
+        // .orient("top")
+        // .tickSize(1)
+        // .tickValues([2301.6666666666665, 2526.3888888888887, 2751.111111111111, 2975.833333333333, 3200.5555555555557, 3425.277777777778, 3650.0]);
 
     color_map_f6a4a4fdafdc46f68dc9e181cd576a49.svg = d3.select(".legend.leaflet-control").append("svg")
-        .attr("id", 'legend')
-        .attr("width", 450)
-        .attr("height", 40);
+        // .attr("id", 'legend')
+        // .attr("width", 450)
+        // .attr("height", 40);
 
     color_map_f6a4a4fdafdc46f68dc9e181cd576a49.g = color_map_f6a4a4fdafdc46f68dc9e181cd576a49.svg.append("g")
         .attr("class", "key")
         .attr("transform", "translate(25,16)");
 
-    color_map_f6a4a4fdafdc46f68dc9e181cd576a49.g.selectAll("rect")
-        .data(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.range().map(function(d, i) {
-          return {
-            x0: i ? color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.domain()[i - 1]) : color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x.range()[0],
-            x1: i < color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.domain().length ? color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.domain()[i]) : color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x.range()[1],
-            z: d
-          };
-        }))
-      .enter().append("rect")
-        .attr("height", 10)
-        .attr("x", function(d) { return d.x0; })
-        .attr("width", function(d) { return d.x1 - d.x0; })
-        .style("fill", function(d) { return d.z; });
+    // color_map_f6a4a4fdafdc46f68dc9e181cd576a49.g.selectAll("rect")
+    //     .data(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.range().map(function(d, i) {
+    //       return {
+    //         x0: i ? color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.domain()[i - 1]) : color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x.range()[0],
+    //         x1: i < color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.domain().length ? color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.color.domain()[i]) : color_map_f6a4a4fdafdc46f68dc9e181cd576a49.x.range()[1],
+    //         z: d
+    //       };
+    //     }))
+    //   .enter().append("rect")
+    //     .attr("height", 10)
+    //     .attr("x", function(d) { return d.x0; })
+    //     .attr("width", function(d) { return d.x1 - d.x0; })
+    //     .style("fill", function(d) { return d.z; });
 
     color_map_f6a4a4fdafdc46f68dc9e181cd576a49.g.call(color_map_f6a4a4fdafdc46f68dc9e181cd576a49.xAxis).append("text")
         .attr("class", "caption")
@@ -2867,7 +2869,7 @@
 
 		color_map_a5f44cee6e40452fa859662aa787c0cf.legend = L.control({position: 'topright'});
 		color_map_a5f44cee6e40452fa859662aa787c0cf.legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'legend');
+			var div = L.DomUtil.create('div');
 			return div
 		};
 		color_map_a5f44cee6e40452fa859662aa787c0cf.legend.addTo(map_877ac42d284b46e4b2c6085e33cf2961);
@@ -4962,7 +4964,7 @@
 
 		color_map_4e3c1759ca454f1487f1080802f34f34.legend = L.control({position: 'topright'});
 		color_map_4e3c1759ca454f1487f1080802f34f34.legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'legend');
+			var div = L.DomUtil.create('div');
 			return div
 		};
 		color_map_4e3c1759ca454f1487f1080802f34f34.legend.addTo(map_561fb26abd434288826c3d00e375d961);
@@ -7986,7 +7988,7 @@
 
 		color_map_e25f9a4a990d48a98ae267d9610e5fac.legend = L.control({position: 'topright'});
 		color_map_e25f9a4a990d48a98ae267d9610e5fac.legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'legend');
+			var div = L.DomUtil.create('div');
 			return div
 		};
 		color_map_e25f9a4a990d48a98ae267d9610e5fac.legend.addTo(map_a6502cb40e034aad9808a8252448955e);
@@ -10210,7 +10212,7 @@
 
 		color_map_f31f3d954a36405a9b2ac234fe1ee45f.legend = L.control({position: 'topright'});
 		color_map_f31f3d954a36405a9b2ac234fe1ee45f.legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'legend');
+			var div = L.DomUtil.create('div');
 			return div
 		};
 		color_map_f31f3d954a36405a9b2ac234fe1ee45f.legend.addTo(map_f32c712800364f35bba4225d0441ebe2);

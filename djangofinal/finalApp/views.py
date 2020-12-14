@@ -147,7 +147,7 @@ def noonegu(request, id):
     expensive_li = []
     cheap_li = []
 
-    with open('./static/jang_mart_price_vs.csv', mode='r') as seoul_lists02:
+    with open('./static/jang_mart_price_vs.csv', mode='r', encoding='utf-8-sig') as seoul_lists02:
         reader = csv.reader(seoul_lists02)
 
         for list_num02 in reader:
@@ -180,7 +180,9 @@ def noonegu(request, id):
                 label_si.append(4)
             elif i == '오이':
                 label_si.append(5)
-
+    print(label_mart)
+    print('*' * 50)
+    print(label_si)
     with open('./static/dict_expensive_cheap.csv', mode='r') as dict_expensive_cheap:
         reader = csv.reader(dict_expensive_cheap)
 
