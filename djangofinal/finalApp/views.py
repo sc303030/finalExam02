@@ -199,7 +199,7 @@ def noonegu(request, id):
     ratio = []
     expen_cheap = []
 
-    with open('./static/gu_expen_cheaper.csv', mode='r', encoding='utf-8') as seoul_lists:
+    with open('./static/gu_expen_cheaper.csv', mode='r', encoding='utf-8-sig') as seoul_lists:
         reader = csv.reader(seoul_lists)
 
         for list_num in reader:
@@ -216,7 +216,7 @@ def noonegu(request, id):
         wr = csv.writer(csvfile, delimiter=',')
         for i in csvData4:
             wr.writerow(i)
-
+            print(i)
     local_next = []
     cheaper_next = []
     expen_next = []

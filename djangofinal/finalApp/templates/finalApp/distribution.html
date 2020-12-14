@@ -20,6 +20,7 @@
             margin: 0 auto;
             display: block;
         }
+
     </style>
 
 
@@ -159,11 +160,12 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<h3 style="text-align: center; margin-bottom: 30px;">양파 가격으로 알아보는 유통과정</h3>
-					<img src="{% static 'assets/img/distri_onion.png' %}" class="img-responsive" style=" display: block; margin: 0px auto;">
+					 <img src="{% static 'assets/img/distri_onion.png' %}" class="img-responsive" style=" display: block; margin: 0px auto;">
 <!--					<figure class="highcharts-figure">-->
 <!--					  <div id="container"></div>-->
 <!--					</figure>-->
 				</div>
+				<a id="popoverOption" class="btn" href="#" data-content="Popup with option trigger" rel="popover" data-placement="bottom" data-original-title="Title">Popup with option trigger</a>
 			</div>
 		</div>
 	</div>
@@ -446,7 +448,9 @@
 	<script>
 	$(document).on('click', '[data-lightbox]', lity);
     </script>
-
+	<script>
+		$('#popoverOption').popover({ trigger: "hover" });
+	</script>
 	<script>
 	Highcharts.chart('container', {
 	  chart: {
