@@ -662,7 +662,7 @@ def vegetableSelectProducer(request, id):
     todayTest = datetime.today().strftime('%Y-%m-%d')
     yesterdayTest = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
     twodaysagoTest = (datetime.today() - timedelta(2)).strftime('%Y-%m-%d')
-
+    print(twodaysagoTest)
 
     with open('./static/sijang_pred_final.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
         reader = csv.reader(vegetable_lists_p)
@@ -697,6 +697,7 @@ def vegetableSelectProducer(request, id):
 
                 if list_num[1] == twodaysagoTest:
                     martDic['twodaysago'] = (int(list_num[3]))
+                    print("martDic['twodaysago']",martDic['twodaysago'])
                     sijangDic['twodaysago'] = (int(list_num[0]))
                     print("if3")
 
