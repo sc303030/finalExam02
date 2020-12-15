@@ -217,6 +217,14 @@
 												{% endif %}
 											{% endfor %}
 										</div>
+										<ul id='thisul'>
+                            <li>
+                                <input/>
+                                <label><img src="http://townandcountryremovals.com/wp-content/uploads/2013/10/firefox-logo-200x200.png" /></label>
+                                여기저기거기-범키
+                             </label>
+                            </li>
+                        </ul>
 									</div>
 								</div>
 							</div>
@@ -837,5 +845,17 @@
 		})
 	})
 	</script>
+<script>
+        $(document).ready(function(){
+            $('#thisul').empty()
+            var txt = "";
+            for(var i = 0; i<100; i++){
+                txt += '<li>';
+                txt += '앨범 나오는 자리'
+                txt +='</li>'
+            }
+         $('#thisul').append(txt)
+        })
+    </script>
 </body>
 </html>

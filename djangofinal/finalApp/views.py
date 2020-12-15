@@ -41,6 +41,10 @@ from datetime import datetime, timedelta
 def index(request):
     return render(request, 'finalApp/index_2.html')
 
+
+def ttt(request):
+    return render(request, 'finalApp/about_3.html')
+
 def about(request):
     return render(request, 'finalApp/about_2.html')
 

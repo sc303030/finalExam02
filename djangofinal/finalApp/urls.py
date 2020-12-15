@@ -28,4 +28,5 @@ urlpatterns = [
     path('additionalfactors2/', views.additionalfactors2, name='additionalfactors2'),
     path('search/', views.search, name='search'),
     path('predict/', views.predict, name='predict'),
+    path('ttt/', views.ttt, name='ttt'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
