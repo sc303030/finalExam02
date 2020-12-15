@@ -925,18 +925,6 @@ def predict(request):
     dummy7 = float(request.POST['dummy7'])
     dummy8 = float(request.POST['dummy8'])
 
-    pred = dummy1
-
-    ypred2 = int(round((-275.1522 + (dummy1 * 0.2110) + (dummy2 * 0.0005) + (dummy3 * 0.4948) + (dummy4 * 16.9529) + (dummy5 * 6.0531) + (dummy6 * -2.9252) + (dummy7 * 0.6929) + (dummy8 * 1.2675)),0))
-
-    dataset = pd.read_excel('./static/무_시장.xlsx', encoding='utf-8-sig')
-    # dataset.drop(['일자'], axis=1, inplace=True)
-
-    y_target = dataset['가격']
-    X_data = dataset.drop(['가격'], axis=1, inplace=False)
-
-    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
-
     dummydf = pd.DataFrame({
         '경락가평균가격' : [dummy1],
         '반입량' :[dummy2],
@@ -948,61 +936,43 @@ def predict(request):
         '도매가격': [dummy8]
     })
 
+    dataset = pd.read_excel('./static/무_시장.xlsx', encoding='utf-8-sig')
 
+    y_target = dataset['가격']
+    X_data = dataset.drop(['가격'], axis=1, inplace=False)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
 
     def get_model_cv_prediction(model, X_data, y_target):
-        neg_mse_scores = cross_val_score(model, X_data, y_target, scoring="neg_mean_squared_error", cv=3)
         model.fit(X_data, y_target)
 
-    def GBRhyperParameterTuning(X_train, y_train):
-        param_tuning = {
-            'learning_rate': [0.01, 0.05, 0.1],
-            'max_depth': [3, 5, 7, 10],
-            'subsample': [0.5, 0.7],
-            'n_estimators': [100, 200, 500]
+    xgb_reg = XGBRegressor(colsample_bytree=0.7,
+                           gamma=0.1,
+                           learning_rate=0.03,
+                           max_depth=3,
+                           min_child_weight=5,
+                           n_estimators=200,
+                           objective='reg:squarederror',
+                           subsample=0.7)
 
-        }
-
-        gb_model = GradientBoostingRegressor()
-
-        gsearch = GridSearchCV(estimator=gb_model,
-                               param_grid=param_tuning,
-                               # scoring = 'neg_mean_absolute_error', #MAE
-                               # scoring = 'neg_mean_squared_error',  #MSE
-                               cv=3,
-                               n_jobs=-1,
-                               verbose=1)
-
-        gsearch.fit(X_train, y_train)
-
-        return gsearch.best_params_
-
-    gb_reg = GradientBoostingRegressor(random_state=0,
-                                       learning_rate=0.1,
-                                       max_depth=7,
-                                       n_estimators=100,
-                                       subsample=0.7
-                                       )
-
-    models = [gb_reg]
+    models = [xgb_reg]
 
     for model in models:
         get_model_cv_prediction(model, X_train, y_train)
 
-    er = VotingRegressor([('gb_reg', gb_reg)])
-
-    er.fit(X_train, y_train).score(X_test, y_test)
-
-    X_train, X_test, y_train, y_test = train_test_split(X_data, y_target, test_size=0.15, random_state=140)
-    estimators = ([('gb_reg', gb_reg)])
+    estimators = ([('xgb_reg', xgb_reg)])
     reg = StackingRegressor(estimators=estimators,
                             final_estimator=RandomForestRegressor(n_estimators=10, random_state=42))
     reg.fit(X_train, y_train).score(X_test, y_test)
 
-    ypred1  = gb_reg.predict(dummydf)
+    ypred1  = xgb_reg.predict(dummydf)
+
+    ypred2 = int(round((-275.1522 + (dummy1 * 0.2110) + (dummy2 * 0.0005) + (dummy3 * 0.4948) + (dummy4 * 16.9529) + (
+                dummy5 * 6.0531) + (dummy6 * -2.9252) + (dummy7 * 0.6929) + (dummy8 * 1.2675)), 0))
 
     data = [{
         'oneresult' : format(int(round(ypred1[0],0)),','),
         'tworesult' : format(ypred2,',')
     }]
     return JsonResponse(data, safe=False)
+
