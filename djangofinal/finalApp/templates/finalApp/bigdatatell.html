@@ -118,7 +118,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="section-title" id="nametitle">
-						<h3>4년간의 <span class="orange-text">배추 가격</span> 변동율</h3>
+						<h3>4년간의 <span class="orange-text">배추 가격</span> 변동률</h3>
 					</div>
 				</div>
 			</div>
@@ -158,7 +158,7 @@
 				type: 'post',
 				success: function (data) {
 					$('#nametitle').empty()
-					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
 						$('#nooneacabbagediv').hide()
@@ -233,7 +233,7 @@
 					}
 					Highcharts.chart('chartdiv', {
 							chart : { type : 'spline'},
-							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동률' },
 							xAxis : {
 								 categories: data[0].data_price_change,
 								labels: {
@@ -263,7 +263,7 @@
 									   }
 							},
 							yAxis : {
-								title : {text : '변동율'},
+								title : {text : '변동률'},
 								labels: {
 									formatter: function () {
 										return this.value + '%';
@@ -271,7 +271,7 @@
 								}
 							},
 							series : [
-								{   name: data[0].category  + " 변동율",
+								{   name: data[0].category  + " 변동률",
 									data: getDay()
 								}]
 						})
@@ -286,7 +286,7 @@
 				type: 'post',
 				success: function (data) {
 					$('#nametitle').empty()
-					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
 						$('#nooneacabbagediv').hide()
@@ -362,7 +362,7 @@
 					console.log(getDay2())
 					Highcharts.chart('chartdiv', {
 							chart : { type : 'spline'},
-							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동률' },
 							xAxis : {
 								 categories: data[0].data_price_change,
 								labels: {
@@ -392,7 +392,7 @@
 									   }
 							},
 							yAxis : {
-								title : {text : '변동율'},
+								title : {text : '변동률'},
 								labels: {
 									formatter: function () {
 										return this.value + '%';
@@ -400,7 +400,7 @@
 								}
 							},
 							series : [
-								{   name: data[0].category  + " 변동율",
+								{   name: data[0].category  + " 변동률",
 									data: getDay2()
 								}]
 						})
@@ -415,7 +415,7 @@
 				type: 'post',
 				success: function (data) {
 					$('#nametitle').empty()
-					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
 						$('#nooneacabbagediv').hide()
@@ -490,7 +490,7 @@
 					console.log(getDay3())
 					Highcharts.chart('chartdiv', {
 							chart : { type : 'spline'},
-							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동률' },
 							xAxis : {
 								 categories: data[0].data_price_change,
 								labels: {
@@ -520,7 +520,7 @@
 									   }
 							},
 							yAxis : {
-								title : {text : '변동율'},
+								title : {text : '변동률'},
 								labels: {
 									formatter: function () {
 										return this.value + '%';
@@ -528,7 +528,7 @@
 								}
 							},
 							series : [
-								{   name: data[0].category  + " 변동율",
+								{   name: data[0].category  + " 변동률",
 									data: getDay3()
 								}]
 						})
@@ -543,7 +543,7 @@
 				type: 'post',
 				success: function (data) {
 					$('#nametitle').empty()
-					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
 						$('#nooneacabbagediv').hide()
@@ -619,7 +619,7 @@
 					console.log(getDay4())
 					Highcharts.chart('chartdiv', {
 							chart : { type : 'spline'},
-							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동률' },
 							xAxis : {
 								 categories: data[0].data_price_change,
 								labels: {
@@ -649,7 +649,7 @@
 									   }
 							},
 							yAxis : {
-								title : {text : '변동율'},
+								title : {text : '변동률'},
 								labels: {
 									formatter: function () {
 										return this.value + '%';
@@ -657,7 +657,7 @@
 								}
 							},
 							series : [
-								{   name: data[0].category  + " 변동율",
+								{   name: data[0].category  + " 변동률",
 									data: getDay4()
 								}]
 						})
@@ -672,7 +672,7 @@
 				type: 'post',
 				success: function (data) {
 					$('#nametitle').empty()
-					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동율</h3>')
+					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
 					if(data[0].priceZero == 'False'){
 						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
 						$('#nooneacabbagediv').hide()
@@ -748,7 +748,7 @@
 					console.log(getDay5())
 					Highcharts.chart('chartdiv', {
 							chart : { type : 'spline'},
-							title : { text :  '4년간의 ' + data[0].category + '가격 변동율' },
+							title : { text :  '4년간의 ' + data[0].category + '가격 변동률' },
 							xAxis : {
 								 categories: data[0].data_price_change,
 								labels: {
@@ -778,7 +778,7 @@
 									   }
 							},
 							yAxis : {
-								title : {text : '변동율'},
+								title : {text : '변동률'},
 								labels: {
 									formatter: function () {
 										return this.value + '%';
@@ -786,7 +786,7 @@
 								}
 							},
 							series : [
-								{   name: data[0].category  + " 변동율",
+								{   name: data[0].category  + " 변동률",
 									data: getDay5()
 								}]
 						})
