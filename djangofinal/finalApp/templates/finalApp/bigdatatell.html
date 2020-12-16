@@ -159,10 +159,6 @@
 				success: function (data) {
 					$('#nametitle').empty()
 					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
-					if(data[0].priceZero == 'False'){
-						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
-					}
 					var dataonion = data[0].onion_change
 					var length = data[0].daylength
 					$('#information').empty()
@@ -287,10 +283,6 @@
 				success: function (data) {
 					$('#nametitle').empty()
 					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
-					if(data[0].priceZero == 'False'){
-						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
-					}
 					var datacabbage = data[0].cabbage_change
 					var length = data[0].daylength
 					$('#information').empty()
@@ -416,10 +408,6 @@
 				success: function (data) {
 					$('#nametitle').empty()
 					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
-					if(data[0].priceZero == 'False'){
-						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
-					}
 					var dataraddish = data[0].raddish_change
 					var length = data[0].daylength
 					$('#information').empty()
@@ -544,10 +532,6 @@
 				success: function (data) {
 					$('#nametitle').empty()
 					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
-					if(data[0].priceZero == 'False'){
-						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
-					}
 					var datacucumber = data[0].cucumber_change
 					var length = data[0].daylength
 					$('#information').empty()
@@ -673,10 +657,6 @@
 				success: function (data) {
 					$('#nametitle').empty()
 					$('#nametitle').html('<h3> 4년간의 <span class="orange-text">' + data[0].category + ' 가격</span> 변동률</h3>')
-					if(data[0].priceZero == 'False'){
-						alert(data[0].name + '에는 '+ data[0].category + '값이 없습니다.');
-						$('#nooneacabbagediv').hide()
-					}
 					var datalettuce = data[0].lettuce_change
 					var length = data[0].daylength
 					$('#information').empty()
