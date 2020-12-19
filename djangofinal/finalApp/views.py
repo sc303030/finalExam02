@@ -364,10 +364,7 @@ def vegetableSelect(request, id):
                 local.append(list_num[0])
                 category_local.append(list_num[1])
                 ratio.append(list_num[2])
-                if str(list_num[3]) == '비싸다':
-                    ExpCheap.append(str('비싸게'))
-                else:
-                    ExpCheap.append(str('싸게'))
+                ExpCheap.append(list_num[3])
 
     local_next = []
     cheaper_next = []
