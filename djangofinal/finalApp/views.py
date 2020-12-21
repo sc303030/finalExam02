@@ -663,9 +663,32 @@ def vegetableSelectProducer(request, id):
 
 
     todayTest = datetime.today().strftime('%Y-%m-%d')
-    yesterdayTest = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
+
+    yesterdayTest = (datetime.today() - timedelta(1)).strftime('%Y-%m-%d')
     twodaysagoTest = (datetime.today() - timedelta(2)).strftime('%Y-%m-%d')
-    print(twodaysagoTest)
+
+    yesterdayTest_mon = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
+    twodaysagoTest_mon = (datetime.today() - timedelta(4)).strftime('%Y-%m-%d')
+
+    yesterdayTest_thus = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
+    twodaysagoTest_thus = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
+
+
+    print(twodaysagoTest_mon, twodaysagoTest_thus)
+
+    sijang_pred_final = pd.read_csv('./static/sijang_pred_final.csv',header=None,encoding='utf-8-sig')
+    print(sijang_pred_final)
+
+    for idx,value in sijang_pred_final:
+        if value['2'] == str(id):
+            price_mart.append(int(value[3]))
+            price_sijang.append(int(list_num[0]))
+            category.append(list_num[2])
+            days.append(list_num[1])
+
+
+
+
 
     with open('./static/sijang_pred_final.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
         reader = csv.reader(vegetable_lists_p)
@@ -700,9 +723,9 @@ def vegetableSelectProducer(request, id):
 
                 if list_num[1] == twodaysagoTest:
                     martDic['twodaysago'] = (int(list_num[3]))
-                    print("martDic['twodaysago']",martDic['twodaysago'])
                     sijangDic['twodaysago'] = (int(list_num[0]))
                     print("if3")
+
 
         martDic['gap'] = martDic['twodaysago'] - martDic['yesterday']
         sijangDic['gap'] = sijangDic['twodaysago'] - sijangDic['yesterday']
@@ -927,13 +950,13 @@ def predict(request):
     dummy8 = float(request.POST['dummy8'])
 
     dummydf = pd.DataFrame({
-        '경락가평균가격' : [dummy1],
-        '반입량' :[dummy2],
-        '유가 전국평균가격' : [dummy3],
-        '유무':[dummy4],
-        '최저기온(°C)':[dummy5],
-        '최고기온(°C)':[dummy6],
-        '일강수량(mm)':[dummy7],
+        '경락가평균가격': [dummy1],
+        '반입량': [dummy2],
+        '유가 전국평균가격': [dummy3],
+        '유무': [dummy4],
+        '최저기온(°C)': [dummy5],
+        '최고기온(°C)': [dummy6],
+        '일강수량(mm)': [dummy7],
         '도매가격': [dummy8]
     })
 
@@ -966,7 +989,7 @@ def predict(request):
                             final_estimator=RandomForestRegressor(n_estimators=10, random_state=42))
     reg.fit(X_train, y_train).score(X_test, y_test)
 
-    ypred1  = xgb_reg.predict(dummydf)
+    ypred1 = xgb_reg.predict(dummydf)
 
     ypred2 = int(round((-275.1522 + (dummy1 * 0.2110) + (dummy2 * 0.0005) + (dummy3 * 0.4948) + (dummy4 * 16.9529) + (
                 dummy5 * 6.0531) + (dummy6 * -2.9252) + (dummy7 * 0.6929) + (dummy8 * 1.2675)), 0))
