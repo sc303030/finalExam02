@@ -673,78 +673,97 @@ def vegetableSelectProducer(request, id):
     yesterdayTest_thus = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
     twodaysagoTest_thus = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
 
-
-    print(twodaysagoTest_mon, twodaysagoTest_thus)
-
     sijang_pred_final = pd.read_csv('./static/sijang_pred_final.csv',header=None,encoding='utf-8-sig')
-    print(sijang_pred_final)
 
-    for idx,value in sijang_pred_final:
-        if value['2'] == str(id):
-            price_mart.append(int(value[3]))
-            price_sijang.append(int(list_num[0]))
-            category.append(list_num[2])
-            days.append(list_num[1])
+    for idx in range(len(sijang_pred_final.iloc[:,1])):
+        print(idx)
+        if sijang_pred_final.iloc[idx,2] == str(id):
+            print(2)
+            price_mart.append(int(sijang_pred_final.iloc[idx,3]))
+            price_sijang.append(int(sijang_pred_final.iloc[idx,0]))
+            category.append(sijang_pred_final.iloc[idx,2])
+            days.append(sijang_pred_final.iloc[idx,1])
+
+            martDic['kind'] = '마트'
+            sijangDic['kind'] = '시장'
+
+            weeklyMart1 = int(np.mean(price_mart))
+            weeklyMart2 = int(np.trunc(weeklyMart1))
+            martDic['weekly'] = weeklyMart2
+
+            weeklySijang1 = int(np.mean(price_sijang))
+            weeklySijang2 = int(np.trunc(weeklySijang1))
+            sijangDic['weekly'] = weeklySijang2
+
+            print(sijang_pred_final.iloc[idx,1])
+            if sijang_pred_final.iloc[idx,1] == todayTest:
+                print("if1")
+                martDic['today'] = (int(sijang_pred_final.iloc[idx,3]))
+                sijangDic['today'] = (int(sijang_pred_final.iloc[idx,0]))
+
+                martDic['yesterday'] = (int(sijang_pred_final.iloc[idx-1,3]))
+                sijangDic['yesterday'] = (int(sijang_pred_final.iloc[idx-1,0]))
+                print("if2")
+
+                martDic['twodaysago'] = (int(sijang_pred_final.iloc[idx-2,3]))
+                sijangDic['twodaysago'] = (int(sijang_pred_final.iloc[idx-2,0]))
+                print("if3")
+
+    # with open('./static/sijang_pred_final.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
+    #     reader = csv.reader(vegetable_lists_p)
+    #
+    #     for list_num in reader:
+    #         if list_num[2] == str(id):
+    #             price_mart.append(int(list_num[3]))
+    #             price_sijang.append(int(list_num[0]))
+    #             category.append(list_num[2])
+    #             days.append(list_num[1])
+    #
+    #             martDic['kind'] = '마트'
+    #             sijangDic['kind'] = '시장'
+    #
+    #             weeklyMart1 = int(np.mean(price_mart))
+    #             weeklyMart2 = int(np.trunc(weeklyMart1))
+    #             martDic['weekly'] = weeklyMart2
+    #
+    #             weeklySijang1 = int(np.mean(price_sijang))
+    #             weeklySijang2 = int(np.trunc(weeklySijang1))
+    #             sijangDic['weekly'] = weeklySijang2
+    #
+    #             if list_num[1] == todayTest:
+    #                 print("if1")
+    #                 martDic['today'] = (int(list_num[3]))
+    #                 sijangDic['today'] = (int(list_num[0]))
+    #
+    #             if list_num[1] == yesterdayTest:
+    #                 martDic['yesterday'] = (int(list_num[3]))
+    #                 sijangDic['yesterday'] = (int(list_num[0]))
+    #                 print("if2")
+    #
+    #             if list_num[1] == twodaysagoTest:
+    #                 martDic['twodaysago'] = (int(list_num[3]))
+    #                 sijangDic['twodaysago'] = (int(list_num[0]))
+    #                 print("if3")
 
 
+    martDic['gap'] = martDic['twodaysago'] - martDic['yesterday']
+    sijangDic['gap'] = sijangDic['twodaysago'] - sijangDic['yesterday']
 
+    martDic['weekly'] = format(martDic['weekly'],',')
+    sijangDic['weekly'] = format(sijangDic['weekly'],',')
+    martDic['today'] = format(martDic['today'],',')
+    sijangDic['today'] = format(sijangDic['today'],',')
+    martDic['yesterday'] = format(martDic['yesterday'],',')
+    sijangDic['yesterday'] = format(sijangDic['yesterday'],',')
+    martDic['twodaysago'] = format(martDic['twodaysago'],',')
+    sijangDic['twodaysago'] = format(sijangDic['twodaysago'],',')
+    martDic['gap'] = format(martDic['gap'],',')
+    sijangDic['gap'] = format(sijangDic['gap'],',')
 
+    trData.append(martDic)
+    trData.append(sijangDic)
 
-    with open('./static/sijang_pred_final.csv', mode='r', encoding='utf-8-sig') as vegetable_lists_p:
-        reader = csv.reader(vegetable_lists_p)
-
-        for list_num in reader:
-            if list_num[2] == str(id):
-                price_mart.append(int(list_num[3]))
-                price_sijang.append(int(list_num[0]))
-                category.append(list_num[2])
-                days.append(list_num[1])
-
-                martDic['kind'] = '마트'
-                sijangDic['kind'] = '시장'
-
-                weeklyMart1 = int(np.mean(price_mart))
-                weeklyMart2 = int(np.trunc(weeklyMart1))
-                martDic['weekly'] = weeklyMart2
-
-                weeklySijang1 = int(np.mean(price_sijang))
-                weeklySijang2 = int(np.trunc(weeklySijang1))
-                sijangDic['weekly'] = weeklySijang2
-
-                if list_num[1] == todayTest:
-                    print("if1")
-                    martDic['today'] = (int(list_num[3]))
-                    sijangDic['today'] = (int(list_num[0]))
-
-                if list_num[1] == yesterdayTest:
-                    martDic['yesterday'] = (int(list_num[3]))
-                    sijangDic['yesterday'] = (int(list_num[0]))
-                    print("if2")
-
-                if list_num[1] == twodaysagoTest:
-                    martDic['twodaysago'] = (int(list_num[3]))
-                    sijangDic['twodaysago'] = (int(list_num[0]))
-                    print("if3")
-
-
-        martDic['gap'] = martDic['twodaysago'] - martDic['yesterday']
-        sijangDic['gap'] = sijangDic['twodaysago'] - sijangDic['yesterday']
-
-        martDic['weekly'] = format(martDic['weekly'],',')
-        sijangDic['weekly'] = format(sijangDic['weekly'],',')
-        martDic['today'] = format(martDic['today'],',')
-        sijangDic['today'] = format(sijangDic['today'],',')
-        martDic['yesterday'] = format(martDic['yesterday'],',')
-        sijangDic['yesterday'] = format(sijangDic['yesterday'],',')
-        martDic['twodaysago'] = format(martDic['twodaysago'],',')
-        sijangDic['twodaysago'] = format(sijangDic['twodaysago'],',')
-        martDic['gap'] = format(martDic['gap'],',')
-        sijangDic['gap'] = format(sijangDic['gap'],',')
-
-        trData.append(martDic)
-        trData.append(sijangDic)
-
-        print(">>>>>>>", trData)
+    print(">>>>>>>", trData)
         # print(">>>>>>>>", type(datetime.today().strftime('%Y-%m-%d')), datetime.today().strftime('%Y-%m-%d'))
         # print(">>>>>>>> list_num[1]  type: ", type(list_num[1]), list_num[1])
 
