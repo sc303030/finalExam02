@@ -664,14 +664,14 @@ def vegetableSelectProducer(request, id):
 
     todayTest = datetime.today().strftime('%Y-%m-%d')
 
-    yesterdayTest = (datetime.today() - timedelta(1)).strftime('%Y-%m-%d')
-    twodaysagoTest = (datetime.today() - timedelta(2)).strftime('%Y-%m-%d')
-
-    yesterdayTest_mon = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
-    twodaysagoTest_mon = (datetime.today() - timedelta(4)).strftime('%Y-%m-%d')
-
-    yesterdayTest_thus = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
-    twodaysagoTest_thus = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
+    # yesterdayTest = (datetime.today() - timedelta(1)).strftime('%Y-%m-%d')
+    # twodaysagoTest = (datetime.today() - timedelta(2)).strftime('%Y-%m-%d')
+    #
+    # yesterdayTest_mon = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
+    # twodaysagoTest_mon = (datetime.today() - timedelta(4)).strftime('%Y-%m-%d')
+    #
+    # yesterdayTest_thus = (datetime.today()-timedelta(1)).strftime('%Y-%m-%d')
+    # twodaysagoTest_thus = (datetime.today() - timedelta(3)).strftime('%Y-%m-%d')
 
     sijang_pred_final = pd.read_csv('./static/sijang_pred_final.csv',header=None,encoding='utf-8-sig')
 
