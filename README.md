@@ -2,8 +2,6 @@
 
 ### 소비자를 위한 농산물 가격 종합 AI 시스템
 
-### 주소 : http://onioncabbage.pythonanywhere.com/
-
 ![01](./img/01.jpg)
 
 - 소비자들에게 농산물 가격을 알려주기 위해 만든 가격 종합 AI사이트이다.
